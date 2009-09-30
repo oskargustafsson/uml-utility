@@ -3,7 +3,7 @@ package uml_entities;
 import javax.swing.JPanel;
 
 @SuppressWarnings("serial")
-public class Entity extends JPanel {
+public abstract class Entity extends JPanel {
 	
 	private String identifier = "";
 	

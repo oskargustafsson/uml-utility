@@ -1,8 +1,12 @@
 package uml_entity_components;
 
+import utils.Functions;
+
 
 @SuppressWarnings("serial")
-public class Attribute extends ClassEntity {
+public class Attribute extends ClassEntity implements Indexable {
+	
+	public static final int partCount = 4;
 	
 	private String type, value;
 
@@ -10,6 +14,13 @@ public class Attribute extends ClassEntity {
 		super(visibility, name);
 		this.type = type;
 		this.value = value;
+		updateRepresentation();
+	}
+	
+	public Attribute(Object[] args) {
+		super(Functions.visibilityFromString(args[0].toString()), args[1].toString());
+		this.type = args[2].toString();
+		this.value = args[3].toString();
 		updateRepresentation();
 	}
 
@@ -30,20 +41,43 @@ public class Attribute extends ClassEntity {
 	}
 	
 	private void updateRepresentation() {
-		String rep = getVisibilityRepresentation() + getName();		// visibility and name always defined
+		String rep = Functions.getVisibilityRepresentation(getVisibility()) + getName();		// visibility and name always defined
 		rep += type.equals("") ? "" : ": " + type;
 		rep += value.equals("") ? "" : " = " + value;
 		setText(rep);
 		validate();
 	}
 	
-	private String getVisibilityRepresentation() {
-		switch(getVisibility()) {
-		case PRIVATE:	return "-";
-		case PUBLIC:	return "+";
-		case PROTECTED:	return "#";
-		default:		return "";
+	public static String[] getDataLabels() {
+		return new String[]{"Visibility", "Name", "Type", "Value"};
+	}
+
+	@Override
+	public Object getValue(int index) {
+		switch(index) {
+		case 0: return getVisibility();
+		case 1: return getName();
+		case 2: return getType();
+		case 3: return getValue();
+		default: return null;
 		}
+	}
+
+	@Override
+	public int getValueCount() {
+		return 4;
+	}
+
+	@Override
+	public void setValue(int index, Object object) {
+		switch(index) {
+		case 0: setVisibility(null); break;
+		case 1: setName(object.toString()); break;
+		case 2: setType(object.toString()); break;
+		case 3: setValue(object.toString()); break;
+		default: System.out.println("Something is wrong.");;
+		}
+		updateRepresentation();
 	}
 	
 }
