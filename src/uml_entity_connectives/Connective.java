@@ -110,7 +110,6 @@ public class Connective extends Line2D {
 		// do nothing
 	}
 
-	@Override
 	public Rectangle2D getBounds2D() {
 		double x1, y1, x2, y2;
 		if(edges[0].getX() < edges[1].getX()) {
@@ -158,4 +157,5 @@ public class Connective extends Line2D {
 	public double kVal() {
 		return (getCenterY2()-getCenterY1())/(getCenterX2()-getCenterX1());
 	}
+
 }

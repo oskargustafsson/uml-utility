@@ -25,15 +25,12 @@ public abstract class PanelTableModel extends AbstractTableModel {
 		return contents;
 	}
 	
-	@Override
 	public abstract int getColumnCount();
 
-	@Override
 	public int getRowCount() {
 		return contents.getComponentCount();
 	}
 
-	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		return ((Indexable)contents.getComponent(rowIndex)).getValue(columnIndex);
 	}

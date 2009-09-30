@@ -49,6 +49,9 @@ public class Canvas extends JPanel {
 	
 	public void addEdgeToCurrentConnective(Entity entity) {
 		System.out.println(entity.getIdentifier());
+		
+		// add (potentially unfinished) connective to the entity, to make it easier to find
+		
 		switch(currentConnective.getEdgeCount()) {
 		case 0:
 			currentConnective.addEdge(entity);
@@ -57,6 +60,8 @@ public class Canvas extends JPanel {
 			currentConnective.addEdge(entity);
 			currentConnective.debugPrint();
 			connectives.add(currentConnective);
+			currentConnective.getEdge(0).addConnective(currentConnective);
+			currentConnective.getEdge(1).addConnective(currentConnective);
 			currentConnective = new Connective();
 			GUI.getInstance().setCurrentTool(Tool.NONE);
 			repaint();

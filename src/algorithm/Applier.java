@@ -34,7 +34,7 @@ public class Applier extends Thread {
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				break;
 			}
 		} while (doRepeat && !isInterrupted());
 	}

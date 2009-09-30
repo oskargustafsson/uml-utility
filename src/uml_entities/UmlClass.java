@@ -115,7 +115,7 @@ public class UmlClass extends Entity implements MouseListener, MouseMotionListen
 		return jAttributes;
 	}
 
-	@Override
+
 	public synchronized void mouseDragged(MouseEvent e) {
 		int x = e.getLocationOnScreen().x - getParent().getLocationOnScreen().x;
 		int y = e.getLocationOnScreen().y - getParent().getLocationOnScreen().y;
@@ -123,15 +123,12 @@ public class UmlClass extends Entity implements MouseListener, MouseMotionListen
 		getParent().repaint();
 	}
 
-	@Override
 	public void mousePressed(MouseEvent e) {
 		mouseDragOffset = e.getPoint();
 	}
 
-	@Override
 	public void mouseMoved(MouseEvent e) {}
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		// Right click -> show popup menu 
 		if(e.getButton() == MouseEvent.BUTTON3) {
@@ -145,13 +142,10 @@ public class UmlClass extends Entity implements MouseListener, MouseMotionListen
 		}
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent e) {}
 
-	@Override
 	public void mouseExited(MouseEvent e) {}
 
-	@Override
 	public void mouseReleased(MouseEvent e) {}
 }
 
