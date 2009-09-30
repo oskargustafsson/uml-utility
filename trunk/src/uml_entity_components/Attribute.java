@@ -52,7 +52,6 @@ public class Attribute extends ClassEntity implements Indexable {
 		return new String[]{"Visibility", "Name", "Type", "Value"};
 	}
 
-	@Override
 	public Object getValue(int index) {
 		switch(index) {
 		case 0: return getVisibility();
@@ -63,12 +62,10 @@ public class Attribute extends ClassEntity implements Indexable {
 		}
 	}
 
-	@Override
 	public int getValueCount() {
 		return 4;
 	}
 
-	@Override
 	public void setValue(int index, Object object) {
 		switch(index) {
 		case 0: setVisibility(null); break;

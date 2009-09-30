@@ -33,11 +33,12 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	private JMenuBar menubar;
 	private JMenu mnuFile, mnuEdit;
 	private JToolBar toolbar;
-	private JButton addClass, addConnective;
+	private JButton addClass, addConnective, runAlgorithm;
 	private Canvas canvas;
 
 	private Tool currentTool = Tool.NONE;
 
+	private Applier applier;
 	
 
 	private GUI() {
@@ -47,7 +48,6 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		setSize(800, 600);
 		initGUI();
 		setVisible(true);
-		new Applier(new ForceAlgorithm(), canvas, 100).start();
 	}
 	
 	public static GUI getInstance() {
@@ -79,11 +79,30 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 				currentTool = Tool.DRAW_CONNECTIVE;
 			}
 		});
+		
+		runAlgorithm = new JButton("Run");
+		runAlgorithm.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent arg0) {
+			if(applier == null) {
+			    applier = new Applier(new ForceAlgorithm(), canvas, 1000);
+			    applier.start();
+			    runAlgorithm.setText("Stop");   
+			}
+			else {
+			    applier.interrupt();
+			    applier = null;
+			    runAlgorithm.setText("Run");
+			}
+		    }
+		});
 
 		toolbar = new JToolBar(JToolBar.VERTICAL);
 		toolbar.setRollover(true);
 		toolbar.add(addClass);
 		toolbar.add(addConnective);
+		toolbar.addSeparator();
+		toolbar.add(runAlgorithm);
+		
 
 		canvas = new Canvas();
 		canvas.setLayout(null);
@@ -93,11 +112,12 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 		addClass("class 1");
 		addClass("class 2");
+		//addClass("class 3");
 
 		Component[] classes = canvas.getComponents();
 
-		((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "name", "String", "Oskar"));
-		((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "age", "int", "21"));
+		//((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "name", "String", "Oskar"));
+		//((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "age", "int", "21"));
 
 		Container c = getContentPane();
 
@@ -113,7 +133,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	private void addClass(String name) {
 		UmlClass c = new UmlClass(canvas, name);
 		canvas.add(c);
-		pos = (pos + 100) % (Math.min(getWidth(), getHeight()) - c.getPreferredSize().height);
+		pos = (pos + 200) % (Math.min(getWidth(), getHeight()) - c.getPreferredSize().height);
 		c.setBounds(pos, pos, c.getPreferredSize().width, c.getPreferredSize().height);	
 		c.validate();
 	}
