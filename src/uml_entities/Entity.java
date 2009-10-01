@@ -7,10 +7,15 @@ import java.util.SortedSet;
 
 import javax.swing.JPanel;
 
+import algorithm.force.Body;
+import algorithm.force.Vector2D;
+
 import uml_entity_connectives.Connective;
 
 @SuppressWarnings("serial")
-public abstract class Entity extends JPanel {
+public abstract class Entity extends JPanel implements Body {
+	
+	private Vector2D velocity;
 	
 	private String identifier = "";
 	
@@ -42,6 +47,18 @@ public abstract class Entity extends JPanel {
 	}
 	
 	public Connective[] getConnectives() {
-	    return connectives.toArray(new Connective[connectives.size()]);
+		return connectives.toArray(new Connective[connectives.size()]);
+	}
+
+	public void addVelocity(Vector2D v) {
+		velocity.add(v);
+	}
+
+	public void setVelocity(Vector2D v) {
+		velocity.setTo(v);
+	}
+
+	public Vector2D getVelocity() {
+		return velocity;
 	}
 }

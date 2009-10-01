@@ -29,7 +29,7 @@ import uml_entity_connectives.Connective;
 public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 	private static GUI me = null;
-	
+
 	private JMenuBar menubar;
 	private JMenu mnuFile, mnuEdit;
 	private JToolBar toolbar;
@@ -39,7 +39,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	private Tool currentTool = Tool.NONE;
 
 	private Applier applier;
-	
+
 
 	private GUI() {
 		addMouseListener(this);
@@ -49,7 +49,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		initGUI();
 		setVisible(true);
 	}
-	
+
 	public static GUI getInstance() {
 		if(me == null) {
 			me = new GUI();
@@ -79,21 +79,21 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 				currentTool = Tool.DRAW_CONNECTIVE;
 			}
 		});
-		
+
 		runAlgorithm = new JButton("Run");
 		runAlgorithm.addActionListener(new ActionListener() {
-		    public void actionPerformed(ActionEvent arg0) {
-			if(applier == null) {
-			    applier = new Applier(new ForceAlgorithm(), canvas, 1000);
-			    applier.start();
-			    runAlgorithm.setText("Stop");   
+			public void actionPerformed(ActionEvent arg0) {
+				if(applier == null) {
+					applier = new Applier(new ForceAlgorithm(), canvas, 25);
+					applier.start();
+					runAlgorithm.setText("Stop");   
+				}
+				else {
+					applier.interrupt();
+					applier = null;
+					runAlgorithm.setText("Run");
+				}
 			}
-			else {
-			    applier.interrupt();
-			    applier = null;
-			    runAlgorithm.setText("Run");
-			}
-		    }
 		});
 
 		toolbar = new JToolBar(JToolBar.VERTICAL);
@@ -102,7 +102,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		toolbar.add(addConnective);
 		toolbar.addSeparator();
 		toolbar.add(runAlgorithm);
-		
+
 
 		canvas = new Canvas();
 		canvas.setLayout(null);
