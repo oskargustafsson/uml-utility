@@ -133,8 +133,7 @@ public class UmlClass extends Entity implements MouseListener, MouseMotionListen
 	public void mouseClicked(MouseEvent e) {
 		// Right click -> show popup menu 
 		if(e.getButton() == MouseEvent.BUTTON3) {
-			jPopup.show(e.getComponent(),
-					e.getX(), e.getY());
+			jPopup.show(e.getComponent(), e.getX(), e.getY());
 			return;
 		}
 		
