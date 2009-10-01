@@ -19,10 +19,8 @@ public abstract class Entity extends JPanel implements Body {
 	
 	private String identifier = "";
 	
-	LinkedHashSet<Connective> connectives;
-	
 	public Entity() {
-		connectives = new LinkedHashSet<Connective>(); 
+	    velocity = new Vector2D();
 	}
 	
 	public Entity(String identifier) {
@@ -36,18 +34,6 @@ public abstract class Entity extends JPanel implements Body {
 
 	public void setIdentifier(String identifier) {
 		this.identifier = identifier;
-	}
-
-	public void addConnective(Connective connective) {
-	    connectives.add(connective);
-	}
-	
-	public void removeConnective(Connective connective) {
-	    connectives.remove(connectives);
-	}
-	
-	public Connective[] getConnectives() {
-		return connectives.toArray(new Connective[connectives.size()]);
 	}
 
 	public void addVelocity(Vector2D v) {

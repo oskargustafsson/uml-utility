@@ -1,5 +1,6 @@
 package base;
 
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -52,18 +53,17 @@ public class Canvas extends JPanel {
 		
 		// add (potentially unfinished) connective to the entity, to make it easier to find
 		
-		switch(currentConnective.getEdgeCount()) {
+		switch(currentConnective.getVertexCount()) {
 		case 0:
-			currentConnective.addEdge(entity);
+			currentConnective.addVertex(entity);
 			break;
 		case 1:
-			currentConnective.addEdge(entity);
+			currentConnective.addVertex(entity);
 			currentConnective.debugPrint();
 			connectives.add(currentConnective);
-			currentConnective.getEdge(0).addConnective(currentConnective);
-			currentConnective.getEdge(1).addConnective(currentConnective);
 			currentConnective = new Connective();
 			GUI.getInstance().setCurrentTool(Tool.NONE);
+			GUI.getInstance().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			repaint();
 			break;
 		}

@@ -10,61 +10,49 @@ import uml_entities.Entity;
 @SuppressWarnings("serial")
 public class Connective extends Line2D {
 
-	private Entity[] edges;
+	private Entity[] vertices;
 	
-	int nEdges;
+	int nVertices;
 	
 	public Connective() {
-		edges = new Entity[2];
-		nEdges = 0;
+		vertices = new Entity[2];
+		nVertices = 0;
 	}
 
-	public void addEdge(Entity entity) {
-		edges[nEdges] = entity;
-		nEdges++;
+	public void addVertex(Entity entity) {
+		vertices[nVertices] = entity;
+		nVertices++;
 	}
 
-	public int getEdgeCount() {
-		return nEdges;
+	public int getVertexCount() {
+		return nVertices;
 	}
 	
-	public Entity getEdge(int index) {
-		return edges[index];
-	}
-	
-	/*
-	 * assumes entity is one of the edges
-	 */
-	public Entity getOtherEdge(Entity entity) {
-		if(edges[0] == entity) {
-			return edges[1];
-		}
-		else {
-			return edges[0];
-		}
+	public Entity getVertex(int index) {
+		return vertices[index];
 	}
 
 	@Override
 	public Point2D getP1() {
-		return new Point2D.Double(  edges[0].getX() + edges[0].getWidth() / 2.0, 
-									edges[0].getX() + edges[0].getHeight() / 2.0);
+		return new Point2D.Double(  vertices[0].getX() + vertices[0].getWidth() / 2.0, 
+									vertices[0].getX() + vertices[0].getHeight() / 2.0);
 		
 		// NOT DONE
 	}
 
 	@Override
 	public Point2D getP2() {
-		return new Point2D.Double(edges[1].getBounds().getCenterX(), edges[1].getBounds().getCenterY());
+		return new Point2D.Double(vertices[1].getBounds().getCenterX(), vertices[1].getBounds().getCenterY());
 	}
 	
 	@Override
 	public double getX1() {
 		if(Math.abs(kVal()) < 1) {
 			if(getCenterX1() < getCenterX2()) {
-				return edges[0].getX() + edges[0].getWidth();
+				return vertices[0].getX() + vertices[0].getWidth();
 			}
 			else {
-				return edges[0].getX();
+				return vertices[0].getX();
 			}
 		}
 		else {
@@ -76,10 +64,10 @@ public class Connective extends Line2D {
 	public double getX2() {
 		if(Math.abs(kVal()) < 1) {
 			if(getCenterX1() < getCenterX2()) {
-				return edges[1].getX();
+				return vertices[1].getX();
 			}
 			else {
-				return edges[1].getX() + edges[1].getWidth();
+				return vertices[1].getX() + vertices[1].getWidth();
 			}
 		}
 		else {
@@ -91,10 +79,10 @@ public class Connective extends Line2D {
 	public double getY1() {
 		if(Math.abs(kVal()) > 1) {
 			if(getCenterY1() < getCenterY2()) {
-				return edges[0].getY() + edges[0].getHeight();
+				return vertices[0].getY() + vertices[0].getHeight();
 			}
 			else {
-				return edges[0].getY();
+				return vertices[0].getY();
 			}
 		}
 		else {
@@ -106,10 +94,10 @@ public class Connective extends Line2D {
 	public double getY2() {
 		if(Math.abs(kVal()) > 1) {
 			if(getCenterY1() < getCenterY2()) {
-				return edges[1].getY();
+				return vertices[1].getY();
 			}
 			else {
-				return edges[1].getY() + edges[1].getHeight();
+				return vertices[1].getY() + vertices[1].getHeight();
 			}
 		}
 		else {
@@ -124,22 +112,22 @@ public class Connective extends Line2D {
 
 	public Rectangle2D getBounds2D() {
 		double x1, y1, x2, y2;
-		if(edges[0].getX() < edges[1].getX()) {
-			x1 = edges[0].getX() + edges[0].getWidth() / 2.0;
-			x2 = edges[1].getX() - edges[1].getWidth() / 2.0;
+		if(vertices[0].getX() < vertices[1].getX()) {
+			x1 = vertices[0].getX() + vertices[0].getWidth() / 2.0;
+			x2 = vertices[1].getX() - vertices[1].getWidth() / 2.0;
 		}
 		else {
-			x1 = edges[1].getX() + edges[1].getWidth() / 2.0;
-			x2 = edges[0].getX() - edges[0].getWidth() / 2.0;
+			x1 = vertices[1].getX() + vertices[1].getWidth() / 2.0;
+			x2 = vertices[0].getX() - vertices[0].getWidth() / 2.0;
 		}
 		
-		if(edges[0].getY() < edges[1].getY()) {
-			y1 = edges[0].getY() + edges[0].getHeight() / 2.0;
-			y2 = edges[1].getY() - edges[1].getHeight() / 2.0;
+		if(vertices[0].getY() < vertices[1].getY()) {
+			y1 = vertices[0].getY() + vertices[0].getHeight() / 2.0;
+			y2 = vertices[1].getY() - vertices[1].getHeight() / 2.0;
 		}
 		else {
-			y1 = edges[1].getY() + edges[1].getHeight() / 2.0;
-			y2 = edges[0].getY() - edges[0].getHeight() / 2.0;
+			y1 = vertices[1].getY() + vertices[1].getHeight() / 2.0;
+			y2 = vertices[0].getY() - vertices[0].getHeight() / 2.0;
 		}
 		
 		return new Rectangle2D.Double(x1, y1, x2-x1, y2-y1);
@@ -151,19 +139,19 @@ public class Connective extends Line2D {
 	}
 	
 	public double getCenterX1() {
-		return edges[0].getX() + edges[0].getWidth() / 2.0; 
+		return vertices[0].getX() + vertices[0].getWidth() / 2.0; 
 	}
 	
 	public double getCenterX2() {
-		return edges[1].getX() + edges[1].getWidth() / 2.0; 
+		return vertices[1].getX() + vertices[1].getWidth() / 2.0; 
 	}
 	
 	public double getCenterY1() {
-		return edges[0].getY() + edges[0].getHeight() / 2.0; 
+		return vertices[0].getY() + vertices[0].getHeight() / 2.0; 
 	}
 	
 	public double getCenterY2() {
-		return edges[1].getY() + edges[1].getHeight() / 2.0; 
+		return vertices[1].getY() + vertices[1].getHeight() / 2.0; 
 	}
 	
 	public double kVal() {

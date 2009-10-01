@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -77,9 +78,10 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		addConnective.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				currentTool = Tool.DRAW_CONNECTIVE;
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 		});
-
+		
 		runAlgorithm = new JButton("Run");
 		runAlgorithm.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -112,12 +114,15 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 		addClass("class 1");
 		addClass("class 2");
-		//addClass("class 3");
+		addClass("class 3");
+		addClass("class 4");
+		addClass("class 5");
+		addClass("class 6");
 
 		Component[] classes = canvas.getComponents();
 
-		//((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "name", "String", "Oskar"));
-		//((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "age", "int", "21"));
+		((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "name", "String", "Oskar"));
+		((UmlClass)(classes[0])).addAttribute(new Attribute(Visibility.PRIVATE, "age", "int", "21"));
 
 		Container c = getContentPane();
 
@@ -133,7 +138,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	private void addClass(String name) {
 		UmlClass c = new UmlClass(canvas, name);
 		canvas.add(c);
-		pos = (pos + 200) % (Math.min(getWidth(), getHeight()) - c.getPreferredSize().height);
+		pos = (pos + 100) % (Math.min(getWidth(), getHeight()) - c.getPreferredSize().height);
 		c.setBounds(pos, pos, c.getPreferredSize().width, c.getPreferredSize().height);	
 		c.validate();
 	}

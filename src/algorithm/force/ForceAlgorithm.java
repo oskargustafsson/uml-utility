@@ -1,6 +1,7 @@
 package algorithm.force;
 
 import java.awt.Component;
+import java.util.AbstractCollection;
 
 import javax.swing.JComponent;
 
@@ -12,39 +13,37 @@ import algorithm.Algorithm;
 
 public class ForceAlgorithm extends Algorithm {
 
-	public static double DAMPING = 0.95;
-	
-	private Component[] edges;
-	private Connective[] verices;
+    public static double DAMPING = 0.9;
 
-	Vector2D netForce = new Vector2D();
+    private Component[] vertices;
+    private AbstractCollection<Connective> edges;
 
-	public void execute(Canvas canvas) {
-		edges = canvas.getComponents();
+    Vector2D netForce = new Vector2D();
 
+    public void execute(Canvas canvas) {
+	// Electric repulsion
+	vertices = canvas.getComponents();
+	for(Component vertex : vertices) {
 
-		for(Component c : edges) {
-			netForce.setTo(0.0, 0.0);
-
-			for(Component d : edges) {
-				if(c != d) {
-					netForce.add(PhysicsLaws.coulomb(c, d));
-				}
-			}
-
-			verices = ((Entity)c).getConnectives();
-			for(Connective conn : verices) {
-				if(conn.getEdge(0) == c) {
-					netForce.add(PhysicsLaws.hooke(conn.getEdge(0), conn.getEdge(1)));
-				}
-				else {
-					netForce.add(PhysicsLaws.hooke(conn.getEdge(1), conn.getEdge(0)));
-				}
-			}
-
-			((Entity)c).addVelocity(netForce.mul(DAMPING));
-			// NOT DONE
+	    for(Component otherEdge : vertices) {
+		if(vertex != otherEdge) {
+		    ((Entity)vertex).addVelocity(PhysicsLaws.coulomb(vertex, otherEdge));
 		}
+	    }
 	}
+
+	// Spring attraction/repulsion
+	edges = canvas.getConnectives();
+	for(Connective edge : edges) {
+	    edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1)));
+	    edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
+	}
+
+	// Damping and appliance of the net velocity
+	for(Component vertex : vertices) {
+	    Vector2D vel = ((Entity)vertex).getVelocity().mul(DAMPING);
+	    vertex.setLocation(vertex.getX() + (int)vel.x, vertex.getY() + (int)vel.y);
+	}
+    }
 
 }

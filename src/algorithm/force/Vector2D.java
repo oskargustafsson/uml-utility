@@ -1,6 +1,8 @@
 package algorithm.force;
 
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.geom.Point2D;
 
 /*********************************************************
  *  Vector2D.java                                        *
@@ -101,6 +103,14 @@ public class Vector2D
 
         return new Vector2D( this );
     }
+    
+    public Point2D add( Point p )
+    {
+        this.x += p.getX();
+        this.y += p.getY();
+
+        return new Point2D.Double(x, y);
+    }    
 
 
 //  3. Subtraction methods
