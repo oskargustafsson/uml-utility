@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.*;
 
+import algorithm.force.Vector2D;
 import base.Canvas;
 import base.EditClassDialog;
 import base.GUI;
@@ -147,5 +148,6 @@ public class UmlClass extends Entity implements MouseListener, MouseMotionListen
 	public void mouseExited(MouseEvent e) {}
 
 	public void mouseReleased(MouseEvent e) {}
+
 }
 

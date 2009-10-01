@@ -30,13 +30,13 @@ public class Vector2D
 //  BASIC ASSIGNMENT METHODS
 //-------------------------------
 //
-    void setTo( Vector2D vec )
+    public void setTo( Vector2D vec )
     {
         x = vec.x;
         y = vec.y;
     }
 
-    void setTo( double x, double y )
+    public void setTo( double x, double y )
     {
         this.x = x;
         this.y = y;

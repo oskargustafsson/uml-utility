@@ -31,6 +31,18 @@ public class Connective extends Line2D {
 	public Entity getEdge(int index) {
 		return edges[index];
 	}
+	
+	/*
+	 * assumes entity is one of the edges
+	 */
+	public Entity getOtherEdge(Entity entity) {
+		if(edges[0] == entity) {
+			return edges[1];
+		}
+		else {
+			return edges[0];
+		}
+	}
 
 	@Override
 	public Point2D getP1() {
