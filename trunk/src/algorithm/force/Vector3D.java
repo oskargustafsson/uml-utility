@@ -1,6 +1,7 @@
 package algorithm.force;
 
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
@@ -18,35 +19,40 @@ import java.awt.geom.Point2D;
  *********************************************************/
 
 
-public class Vector2D
+public class Vector3D
 {
     public double x = 0.0;
     public double y = 0.0;
+    public double z = 0.0;
 
-    public Vector2D() {}
-    public Vector2D( double x, double y ) { this.x = x; this.y = y; }
-    public Vector2D( Vector2D vec ) { this.x = vec.x; this.y = vec.y; }
-    public Vector2D( Component comp ) { this.x = comp.getX(); this.y = comp.getY(); }
+    public Vector3D() {}
+    public Vector3D( double x, double y, double z ) { this.x = x; this.y = y; this.z = z; }
+    public Vector3D( Vector3D vec ) { this.x = vec.x; this.y = vec.y; this.z = vec.z; }
+    public Vector3D( Component comp ) { this.x = comp.getX(); this.y = comp.getY(); this.z = 0.0; }
 
 
 //  BASIC ASSIGNMENT METHODS
 //-------------------------------
 //
-    public void setTo( Vector2D vec )
+    public void setTo( Vector3D vec )
     {
         x = vec.x;
         y = vec.y;
+        z = vec.z;
+        
+        Container c;
     }
 
-    public void setTo( double x, double y )
+    public void setTo( double x, double y, double z )
     {
         this.x = x;
         this.y = y;
+        this.z = z;
     }
 
     public String toString()
     {
-        return new String( "[" + (int)x + "," + (int)y + "]" );
+        return new String( "[" + (int)x + "," + (int)y + "," + (int)z + "]" );
     }
 
 
@@ -62,11 +68,11 @@ public class Vector2D
 //
     public double length()
     {
-        return Math.sqrt( (x*x) + (y*y) );
+        return Math.sqrt( (x*x) + (y*y) + (z*z) );
     }
 
 
-    public Vector2D normalize()
+    public Vector3D normalize()
     {
         double len = length();
 
@@ -74,93 +80,94 @@ public class Vector2D
         {
             x /= len;
             y /= len;
+            z /= len;
         }
         else
         {
             x = 0.0;
             y = 0.0;
+            z = 0.0;
         }
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
 
 
 //  2. Addition methods
 //-------------------
 //
-    public Vector2D add( Vector2D vec )
+    public Vector3D add( Vector3D vec )
     {
         this.x += vec.x;
         this.y += vec.y;
+        this.z += vec.z;
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
 
-    public Vector2D add( double x, double y )
+    public Vector3D add( double x, double y, double z )
     {
         this.x += x;
         this.y += y;
+        this.z += z;
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
-    
-    public Point2D add( Point p )
-    {
-        this.x += p.getX();
-        this.y += p.getY();
-
-        return new Point2D.Double(x, y);
-    }    
 
 
 //  3. Subtraction methods
 //-----------------------
 //
-    public Vector2D sub( Vector2D vec )
+    public Vector3D sub( Vector3D vec )
     {
         this.x -= vec.x;
         this.y -= vec.y;
+        this.z -= vec.z;
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
 
-    public Vector2D sub( double x, double y )
+    public Vector3D sub( double x, double y, double z )
     {
         this.x -= x;
         this.y -= y;
+        this.z -= z;
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
 
 
 //  4. Multiplication methods
 //-------------------------
 //
-    public Vector2D dot( Vector2D vec )
+    public Vector3D dot( Vector3D vec )
     {
         this.x *= vec.x;
         this.y *= vec.y;
+        this.z *= vec.z;
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
 
-    public Vector2D dot( double x, double y )
+    public Vector3D dot( double x, double y, double z )
     {
         this.x *= x;
         this.y *= y;
+        this.z *= z;
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
 
-    public Vector2D mul( double scalar )
+    public Vector3D mul( double scalar )
     {
         x *= scalar;
         y *= scalar;
+        z *= scalar;
 
-        return new Vector2D( this );
+        return new Vector3D( this );
     }
     
-    public Vector2D unit() {
-	return new Vector2D( this ).normalize();
+    public Vector3D unit() {
+	return new Vector3D( this ).normalize();
     }
 }

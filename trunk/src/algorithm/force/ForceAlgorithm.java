@@ -6,9 +6,12 @@ import java.util.AbstractCollection;
 import javax.swing.JComponent;
 
 import uml_entities.Entity;
+import uml_entities.UmlClass;
 import uml_entity_connectives.Connective;
+import uml_entity_connectives.StraightLine;
 
 import base.Canvas;
+import base.GUI;
 import algorithm.Algorithm;
 
 public class ForceAlgorithm extends Algorithm {
@@ -18,16 +21,17 @@ public class ForceAlgorithm extends Algorithm {
     private Component[] vertices;
     private AbstractCollection<Connective> edges;
 
-    Vector2D netForce = new Vector2D();
+    double totalVelocity;
 
     public void execute(Canvas canvas) {
+	
 	// Electric repulsion
 	vertices = canvas.getComponents();
 	for(Component vertex : vertices) {
-
-	    for(Component otherEdge : vertices) {
-		if(vertex != otherEdge) {
-		    ((Entity)vertex).addVelocity(PhysicsLaws.coulomb(vertex, otherEdge));
+	    Entity e = (Entity)vertex;
+	    for(Component otherVertex : vertices) {
+		if(vertex != otherVertex) {
+		    e.addVelocity(PhysicsLaws.coulomb(e, (Entity)otherVertex));
 		}
 	    }
 	}
@@ -39,10 +43,26 @@ public class ForceAlgorithm extends Algorithm {
 	    edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
 	}
 
-	// Damping and appliance of the net velocity
+	totalVelocity = 0;
+	
+	// Damping and appliance of the velocity
 	for(Component vertex : vertices) {
-	    Vector2D vel = ((Entity)vertex).getVelocity().mul(DAMPING);
-	    vertex.setLocation(vertex.getX() + (int)vel.x, vertex.getY() + (int)vel.y);
+	    Entity e = (Entity)vertex;
+	    Vector3D vel = e.getVelocity().mul(DAMPING);
+	    totalVelocity += vel.length() * vel.length();
+	    e.addPosition(vel);
+	    if(e.isAffected()) {
+		e.setLocation((int)(e.getPosition().x), (int)(e.getPosition().y));
+	    }
+	}
+	
+	edges = canvas.getConnectives();
+	for(Connective edge : edges) {
+	    edge.calculatePoints();
+	}
+	
+	if(totalVelocity < 0.0001) {
+	    GUI.getInstance().stopAlgorithm();
 	}
     }
 
