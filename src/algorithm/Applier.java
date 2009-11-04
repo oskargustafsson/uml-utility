@@ -7,6 +7,7 @@ public class Applier extends Thread {
 
 	private Algorithm algorithm;
 	private Canvas data;
+
 	private int sleepTime;
 
 	private boolean doRepeat;
@@ -36,7 +37,11 @@ public class Applier extends Thread {
 			} catch (InterruptedException e) {
 				break;
 			}
-		} while (doRepeat && !isInterrupted());
+		} while (doRepeat && !isInterrupted() && !algorithm.hasTerminated());
 	}
 
+	public void setDoRepeat(boolean doRepeat) {
+	    this.doRepeat = doRepeat;
+	}
+	
 }

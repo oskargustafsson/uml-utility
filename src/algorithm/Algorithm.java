@@ -4,6 +4,16 @@ import base.Canvas;
 
 public abstract class Algorithm {
 
-	public abstract void execute(Canvas canvas);
-	
+    private boolean hasTerminated;
+
+    public boolean hasTerminated() {
+        return hasTerminated;
+    }
+
+    public void setTerminated() {
+        this.hasTerminated = true;
+    }
+
+    public abstract void execute(Canvas canvas);
+
 }
