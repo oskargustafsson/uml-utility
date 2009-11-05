@@ -2,16 +2,32 @@ package uml_entity_components;
 
 import java.util.LinkedList;
 
-public class Operation extends ClassEntity {
+import utils.Functions;
 
-	String type, stereotype;
-	LinkedList<Parameter> parameters;
+
+@SuppressWarnings("serial")
+public class Operation extends ClassEntity implements Indexable {
 	
-	public Operation(Visibility visibility, String name, String type, String stereotype) {
+	public static final int partCount = 4;
+	
+	private String type, value;
+	
+	LinkedList<Attribute> arguments;
+
+	public Operation(Visibility visibility, String name, String type, String value) {
 		super(visibility, name);
+		arguments = new LinkedList<Attribute>();
 		this.type = type;
-		this.stereotype = stereotype;
-		parameters = new LinkedList<Parameter>();
+		this.value = value;
+		updateRepresentation();
+	}
+	
+	public Operation(Object[] args) {
+		super(Functions.visibilityFromString(args[0].toString()), args[1].toString());
+		arguments = new LinkedList<Attribute>();
+		this.type = args[2].toString();
+		this.value = args[3].toString();
+		updateRepresentation();
 	}
 
 	public String getType() {
@@ -22,20 +38,49 @@ public class Operation extends ClassEntity {
 		this.type = type;
 	}
 
-	public String getStereotype() {
-		return stereotype;
+	public String getValue() {
+		return value;
 	}
 
-	public void setStereotype(String stereotype) {
-		this.stereotype = stereotype;
+	public void setValue(String value) {
+		this.value = value;
 	}
 	
-	public void addParameter(String name, String type, String defValue) {
-		parameters.add(new Parameter(name, type, defValue));
+	private void updateRepresentation() {
+		String rep = Functions.getVisibilityRepresentation(getVisibility()) + getName();		// visibility and name always defined
+		rep += type.equals("") ? "" : ": " + type;
+		rep += value.equals("") ? "" : " = " + value;
+		setText(rep);
+		validate();
 	}
 	
-	public void removeParameter(int index) {
-		parameters.remove(index);
+	public static String[] getDataLabels() {
+		return new String[]{"Visibility", "Name", "Type", "Value"};
 	}
 
+	public Object getValue(int index) {
+		switch(index) {
+		case 0: return getVisibility();
+		case 1: return getName();
+		case 2: return getType();
+		case 3: return getValue();
+		default: return null;
+		}
+	}
+
+	public int getValueCount() {
+		return 4;
+	}
+
+	public void setValue(int index, Object object) {
+		switch(index) {
+		case 0: setVisibility(null); break;
+		case 1: setName(object.toString()); break;
+		case 2: setType(object.toString()); break;
+		case 3: setValue(object.toString()); break;
+		default: System.out.println("Something is wrong.");;
+		}
+		updateRepresentation();
+	}
+	
 }

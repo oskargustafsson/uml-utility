@@ -28,10 +28,11 @@ public abstract class Entity extends JPanel implements Body {
 
     private boolean isAffected = true;
 
+    private String javaPackage;
     
     private File source;
 
-    public Entity() {
+	public Entity() {
 	position = new Vector3D();
 	velocity = new Vector3D();
 	edges = new LinkedList<Connective>();
@@ -111,4 +112,20 @@ public abstract class Entity extends JPanel implements Body {
 	return edges;
     }
     
+
+    public File getSourceFile() {
+		return source;
+	}
+
+	public void setSourceFile(File source) {
+		this.source = source;
+	}
+
+	public String getJavaPackage() {
+		return javaPackage;
+	}
+
+	public void setJavaPackage(String javaPackage) {
+		this.javaPackage = javaPackage;
+	}
 }
