@@ -71,7 +71,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	mnuOpen.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent arg0) {
 		selectProjectPath();
-		JavaParser.parse(fileChooser.getSelectedFile());
+		JavaParser.parseDirectory(fileChooser.getSelectedFile());
 	    }});
 
 	mnuNew= new JMenuItem("New project...");
@@ -175,13 +175,14 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
     private static int pos = 0;
 
-    public void addClass(File file) {
+    public UmlClass addClass(File file) {
 	UmlClass c = new UmlClass(canvas, file);
 	canvas.add(c);
 	pos = (pos + 100) % (Math.min(getWidth(), getHeight()) - c.getPreferredSize().height);
 	c.setBounds(pos, pos, c.getPreferredSize().width, c.getPreferredSize().height);
 	c.setPosition(new Vector3D(pos, pos, (int)(Math.random() * 10)));
 	c.validate();
+	return c;
     }
 
     public void setCurrentTool(Tool currentTool) {
@@ -193,7 +194,8 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
     }
 
     public static void main(String[] args) {
-	GUI.getInstance();
+	GUI gui = GUI.getInstance();
+	JavaParser.dumpMethods(gui.getClass());
     }
 
     public void mouseClicked(MouseEvent e) {}
