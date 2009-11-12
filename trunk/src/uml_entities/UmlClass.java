@@ -139,22 +139,6 @@ public class UmlClass extends Entity implements MouseListener, MouseMotionListen
 		updateRepresentation();
 	}
 
-	private double camDistance = 10;
-
-	protected void paintComponent(Graphics g) {
-		Graphics2D g2d = (Graphics2D)g;
-		//if(getPosition().z > 0.5) {
-		//    g2d.scale(1/(camDistance+getPosition().z), 1/(camDistance+getPosition().z));
-		super.paintComponent(g);
-		//}
-	}
-
-	/*public Rectangle getBounds() {
-	Rectangle r = super.getBounds();
-	double z = getPosition().z;
-	return new Rectangle((int)(r.x / (1+z)), (int)(r.y / (1+z)), (int)(r.width / (1+z)), (int)(r.height / (1+z))); 
-    }*/
-
 	public synchronized void mouseDragged(MouseEvent e) {
 		int x = e.getLocationOnScreen().x - getParent().getLocationOnScreen().x;
 		int y = e.getLocationOnScreen().y - getParent().getLocationOnScreen().y;

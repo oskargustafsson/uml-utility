@@ -23,16 +23,16 @@ public abstract class Entity extends JPanel implements Body {
     private Subgraph subgraph;
 
     private AbstractCollection<Connective> edges;
-    
+
     private Vector3D position, velocity;
 
     private boolean isAffected = true;
 
     private String javaPackage;
-    
+
     private File source;
 
-	public Entity() {
+    public Entity() {
 	position = new Vector3D();
 	velocity = new Vector3D();
 	edges = new LinkedList<Connective>();
@@ -53,6 +53,10 @@ public abstract class Entity extends JPanel implements Body {
 
     public void addVelocity(Vector3D v) {
 	velocity.add(v);
+    }
+    
+    public void addVelocity(double x, double y, double z) {
+	velocity.add(x, y, z);
     }
 
     public void setVelocity(Vector3D v) {
@@ -90,20 +94,20 @@ public abstract class Entity extends JPanel implements Body {
     public void setAffected(boolean isAffected) {
 	this.isAffected = isAffected;
     }
-    
-    
+
+
     public Subgraph getSubgraph() {
-        return subgraph;
+	return subgraph;
     }
 
     public void setSubgraph(Subgraph subgraph) {
-        this.subgraph = subgraph;
+	this.subgraph = subgraph;
     }
 
     public void addEdge(Connective edge) {
 	edges.add(edge);
     }
-    
+
     public void removeEdge(Connective edge) {
 	edges.remove(edge);
     }
@@ -111,21 +115,25 @@ public abstract class Entity extends JPanel implements Body {
     public AbstractCollection<Connective> getEdges() {
 	return edges;
     }
-    
+
 
     public File getSourceFile() {
-		return source;
-	}
+	return source;
+    }
 
-	public void setSourceFile(File source) {
-		this.source = source;
-	}
+    public void setSourceFile(File source) {
+	this.source = source;
+    }
 
-	public String getJavaPackage() {
-		return javaPackage;
-	}
+    public String getJavaPackage() {
+	return javaPackage;
+    }
 
-	public void setJavaPackage(String javaPackage) {
-		this.javaPackage = javaPackage;
-	}
+    public void setJavaPackage(String javaPackage) {
+	this.javaPackage = javaPackage;
+    }
+    
+    public double getZ() {
+	return position.z;
+    }
 }

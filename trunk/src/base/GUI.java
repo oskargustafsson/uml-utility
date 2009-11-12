@@ -13,7 +13,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.File;
+import java.util.AbstractCollection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Random;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -41,7 +44,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
     private JMenu mnuFile, mnuEdit;
     private JMenuItem mnuNew, mnuOpen;
     private JToolBar toolbar;
-    private JButton addClass, addConnective, runAlgorithm;
+    private JButton addClass, addConnective, runAlgorithm, btnFlatten;
     private Canvas canvas;
 
     private Tool currentTool = Tool.NONE;
@@ -71,7 +74,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	mnuOpen.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent arg0) {
 		selectProjectPath();
-		JavaParser.parseDirectory(fileChooser.getSelectedFile());
+		DirectoryParser.generateUmlClassDiagram(fileChooser.getSelectedFile());
 	    }});
 
 	mnuNew= new JMenuItem("New project...");
@@ -117,6 +120,19 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	    }
 	});
 
+	btnFlatten = new JButton("Flatten");
+	btnFlatten.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent arg0) {
+		if(ForceAlgorithm.doFlatten) {
+		    btnFlatten.setText("Flatten");
+		}
+		else {
+		    btnFlatten.setText("Expand");
+		}
+		ForceAlgorithm.doFlatten = !ForceAlgorithm.doFlatten; 
+	    }
+	});
+	
 	toolbar = new JToolBar(JToolBar.VERTICAL);
 	toolbar.setRollover(true);
 	toolbar.setVisible(false);
@@ -124,6 +140,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	toolbar.add(addConnective);
 	toolbar.addSeparator();
 	toolbar.add(runAlgorithm);
+	toolbar.add(btnFlatten);
 
 
 	canvas = new Canvas();
@@ -173,16 +190,31 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	runAlgorithm.setText("Stop");
     }
 
-    private static int pos = 0;
+    private static int pos = 0, spacing = 200, noise = 20;
 
     public UmlClass addClass(File file) {
 	UmlClass c = new UmlClass(canvas, file);
 	canvas.add(c);
-	pos = (pos + 100) % (Math.min(getWidth(), getHeight()) - c.getPreferredSize().height);
-	c.setBounds(pos, pos, c.getPreferredSize().width, c.getPreferredSize().height);
-	c.setPosition(new Vector3D(pos, pos, (int)(Math.random() * 10)));
+	c.setBounds(pos % (getWidth()-spacing) + (int)(Math.random() * noise), 
+		spacing * (pos/(getWidth()-spacing)) + (int)(Math.random() * noise), 
+		c.getPreferredSize().width, 
+		c.getPreferredSize().height);
+	c.setPosition(new Vector3D(c.getX(), c.getY(), (int)(Math.random() * noise)));
+	pos = (pos + spacing) % (getWidth() * getHeight());
 	c.validate();
 	return c;
+    }
+
+    public HashMap<String, UmlClass> getClassMap() {
+	HashMap<String, UmlClass> classes = new HashMap<String, UmlClass>();
+	for(Component c : canvas.getComponents()) {
+	    classes.put(((UmlClass)c).getIdentifier(), (UmlClass)c);
+	}
+	return classes;
+    }
+
+    public void addConnective(UmlClass c1, UmlClass c2) {
+	canvas.addConnective(c1, c2);
     }
 
     public void setCurrentTool(Tool currentTool) {
@@ -195,7 +227,6 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
     public static void main(String[] args) {
 	GUI gui = GUI.getInstance();
-	JavaParser.dumpMethods(gui.getClass());
     }
 
     public void mouseClicked(MouseEvent e) {}
