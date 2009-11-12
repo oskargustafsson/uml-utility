@@ -32,7 +32,8 @@ public class PhysicsLaws {
     }
 
     public static double getCharge(Entity c) {
-	return (c.getWidth() * c.getHeight());
+	return 1000;
+	//return (c.getWidth() + c.getHeight());
     }
 
     public static Vector3D getDirectionVector(Entity c1, Entity c2) {

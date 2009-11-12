@@ -27,4 +27,17 @@ public class Functions {
 		default:		return "";
 		}
 	}
+	
+	public static Visibility visibilityFromInt(int v) {
+	    if((v & 1) != 0) {
+		return Visibility.PUBLIC;
+	    }
+	    if((v & 2) != 0) {
+		return Visibility.PROTECTED;
+	    }
+	    if((v & 4) != 0) {
+		return Visibility.PRIVATE;
+	    }
+	    return Visibility.UNDEFINED;
+	}
 }

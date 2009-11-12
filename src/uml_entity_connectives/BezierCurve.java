@@ -42,13 +42,13 @@ public class BezierCurve extends Connective {
 	    s = Math.signum(y1-y0);
 	    xpoints[0] = (int)(x0 + s * h0 / k);
 	    ypoints[0] = (int)(y0 + s * h0);
-	    dy0 = (y1 - y0) / 2;
+	    dy0 = 1;
 	}
 	else {
 	    s = Math.signum(x1 - x0);
 	    xpoints[0] = (int)(x0 + s * w0);
 	    ypoints[0] = (int)(y0 + s * w0 * k);
-	    dx0 = (x1 - x0) / 2;
+	    dx0 = 1;
 	}
 
 	// Second point
@@ -56,14 +56,19 @@ public class BezierCurve extends Connective {
 	    s = Math.signum(y0-y1);
 	    xpoints[NODES] = (int)(x1 + s * h1 / k);
 	    ypoints[NODES] = (int)(y1 + s * h1);
-	    dy1 = (y0 - y1) / 2;
+	    dy1 = 1;
 	}
 	else {
 	    s = Math.signum(x0 - x1);
 	    xpoints[NODES] = (int)(x1 + s * w1);
 	    ypoints[NODES] = (int)(y1 + s * w1 * k);
-	    dx1 = (x0 - x1) / 2;
+	    dx1 = 1;
 	}
+	
+	dx0 *= (xpoints[NODES] - xpoints[0]) / 2;
+	dy0 *= (ypoints[NODES] - ypoints[0]) / 2;
+	dx1 *= (xpoints[0] - xpoints[NODES]) / 2;
+	dy1 *= (ypoints[0] - ypoints[NODES]) / 2;
 
 	// Points in between
 	for(int i = 1; i < NODES; i++) {
