@@ -9,7 +9,7 @@ import algorithm.force.Vector3D;
 @SuppressWarnings("serial")
 public class BezierCurve extends Connective {
 
-    public static final int NODES = 19;
+    public static final int NODES = 16;
 
     public BezierCurve() {
 	super(new int[NODES + 1], new int[NODES + 1], NODES + 1);
