@@ -26,9 +26,11 @@ import algorithm.force.ForceAlgorithm;
 import algorithm.force.Vector3D;
 
 import uml_entities.Entity;
+import uml_entities.SimpleInterface;
 import uml_entities.UmlClass;
 import uml_entity_components.Attribute;
 import uml_entity_components.Visibility;
+import uml_entity_connectives.Connective;
 import uml_entity_connectives.StraightLine;
 
 @SuppressWarnings("serial")
@@ -123,13 +125,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	btnFlatten = new JButton("Flatten");
 	btnFlatten.addActionListener(new ActionListener() {
 	    public void actionPerformed(ActionEvent arg0) {
-		if(ForceAlgorithm.doFlatten) {
-		    btnFlatten.setText("Flatten");
-		}
-		else {
-		    btnFlatten.setText("Expand");
-		}
-		ForceAlgorithm.doFlatten = !ForceAlgorithm.doFlatten; 
+		switchDimension();
 	    }
 	});
 	
@@ -168,6 +164,16 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
     }
 
+    public void switchDimension() {
+	if(ForceAlgorithm.doFlatten) {
+	    btnFlatten.setText("Flatten");
+	}
+	else {
+	    btnFlatten.setText("Expand");
+	}
+	ForceAlgorithm.doFlatten = !ForceAlgorithm.doFlatten; 
+    }
+
     protected void selectProjectPath() {
 	if (fileChooser.showOpenDialog(me) == JFileChooser.APPROVE_OPTION) { 
 	    if(projectPath == null) {
@@ -199,22 +205,31 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		spacing * (pos/(getWidth()-spacing)) + (int)(Math.random() * noise), 
 		c.getPreferredSize().width, 
 		c.getPreferredSize().height);
-	c.setPosition(new Vector3D(c.getX(), c.getY(), (int)(Math.random() * noise)));
+	c.setPosition(new Vector3D(c.getX(), c.getY(), (int)(Math.random() * noise * 10)));
 	pos = (pos + spacing) % (getWidth() * getHeight());
 	c.validate();
 	return c;
     }
+    
+    public SimpleInterface addSimpleInterface(Entity realizer, String name) {
+	SimpleInterface i = new SimpleInterface(canvas, name);
+	i.setBounds(realizer.getX(), realizer.getY() - 100, SimpleInterface.BOUND_W, SimpleInterface.BOUND_H);
+	i.setPosition(new Vector3D(i.getX(), i.getY(), (int)(Math.random() * noise * 10)));
+	canvas.add(i);
+	i.validate();
+	return i;
+    }
 
-    public HashMap<String, UmlClass> getClassMap() {
-	HashMap<String, UmlClass> classes = new HashMap<String, UmlClass>();
+    public HashMap<String, Entity> getClassMap() {
+	HashMap<String, Entity> classes = new HashMap<String, Entity>();
 	for(Component c : canvas.getComponents()) {
-	    classes.put(((UmlClass)c).getIdentifier(), (UmlClass)c);
+	    classes.put(((Entity)c).getIdentifier(), (Entity)c);
 	}
 	return classes;
     }
 
-    public void addConnective(UmlClass c1, UmlClass c2) {
-	canvas.addConnective(c1, c2);
+    public void addConnective(Connective conn, Entity c1, Entity c2) {
+	canvas.addConnective(conn, c1, c2);
     }
 
     public void setCurrentTool(Tool currentTool) {

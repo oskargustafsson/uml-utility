@@ -26,156 +26,125 @@ import uml_entity_components.*;
 import uml_entity_connectives.Connective;
 
 @SuppressWarnings("serial")
-public class UmlClass extends Entity implements MouseListener, MouseMotionListener {
+public class UmlClass extends Entity implements MouseListener {
 
-	private Canvas canvas;
+    private JLabel jIdentifier;
+    private JPanel jAttributes, jOperations;
 
-	private Point mouseDragOffset;
+    private JPopupMenu jPopup;
+    private JMenuItem jEditClass;
 
-	private JLabel jIdentifier;
-	private JPanel jAttributes, jOperations;
+    public UmlClass(Canvas canvas, File source) {
+	super(canvas, source);
 
-	private JPopupMenu jPopup;
-	private JMenuItem jEditClass;
-	
-	public UmlClass(Canvas canvas, File source) {
-		super(source);
+	//System.out.println("Added class: " + source.getAbsolutePath());
+	//System.out.println(" Path:\t" + source.getParent());
 
-		//System.out.println("Added class: " + source.getAbsolutePath());
-		//System.out.println(" Path:\t" + source.getParent());
+	jPopup = new JPopupMenu();
+	jEditClass = new JMenuItem("Edit class...");
+	jEditClass.addActionListener(new ActionListener() {
+	    public void actionPerformed(ActionEvent e) {
+		showEditDialog();
+	    }});
+	jPopup.add(jEditClass);
 
-		this.canvas = canvas;
+	setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+	setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-		jPopup = new JPopupMenu();
-		jEditClass = new JMenuItem("Edit class...");
-		jEditClass.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				showEditDialog();
-			}});
-		jPopup.add(jEditClass);
+	jIdentifier = new JLabel(getIdentifier(), JLabel.CENTER);
+	jIdentifier.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-		setBorder(BorderFactory.createLineBorder(Color.BLACK));
+	jAttributes = new JPanel();
+	jAttributes.setLayout(new BoxLayout(jAttributes, BoxLayout.Y_AXIS));
+	jAttributes.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+	jAttributes.setBackground(Color.WHITE);
+	jAttributes.setOpaque(true);
+	jOperations = new JPanel();
+	jOperations.setLayout(new BoxLayout(jOperations, BoxLayout.Y_AXIS));
+	jOperations.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+	jOperations.setBackground(Color.WHITE);
+	jOperations.setOpaque(true);
 
-		jIdentifier = new JLabel(getIdentifier(), JLabel.CENTER);
-		jIdentifier.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
+	add(jIdentifier);
+	add(new JSeparator(JSeparator.HORIZONTAL));
+	add(jAttributes);
+	add(new JSeparator(JSeparator.HORIZONTAL));
+	add(jOperations);
 
-		jAttributes = new JPanel();
-		jAttributes.setLayout(new BoxLayout(jAttributes, BoxLayout.Y_AXIS));
-		jAttributes.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-		jAttributes.setBackground(Color.WHITE);
-		jAttributes.setOpaque(true);
-		jOperations = new JPanel();
-		jOperations.setLayout(new BoxLayout(jOperations, BoxLayout.Y_AXIS));
-		jOperations.setBorder(BorderFactory.createEmptyBorder(2, 5, 2, 5));
-		jOperations.setBackground(Color.WHITE);
-		jOperations.setOpaque(true);
+	setBackground(Color.WHITE);
+	setOpaque(true);
 
-		add(jIdentifier);
-		add(new JSeparator(JSeparator.HORIZONTAL));
-		add(jAttributes);
-		add(new JSeparator(JSeparator.HORIZONTAL));
-		add(jOperations);
+	addMouseListener(this);
+	addMouseMotionListener(this);
+    }
 
-		setBackground(Color.WHITE);
-		setOpaque(true);
+    public void addAttribute(Attribute attribute) {
+	jAttributes.add(attribute);
+	updateRepresentation();
+    }
 
-		addMouseListener(this);
-		addMouseMotionListener(this);
+    public void removeAttribute(int index) {
+	jAttributes.remove(index);
+	updateRepresentation();
+    }
+
+    public void addOperation(Operation operation) {
+	jOperations.add(operation);
+	updateRepresentation();
+    }
+
+    public void removeOperation(int index) {
+	jOperations.remove(index);
+	updateRepresentation();
+    }
+
+    @Override
+    public void setIdentifier(String identifier) {
+	super.setIdentifier(identifier);
+	jIdentifier.setText(identifier);
+	updateRepresentation();
+    }
+
+    public void showEditDialog() {
+	new EditClassDialog(this);
+    }
+
+    public void updateRepresentation() {
+	invalidate();
+	setBounds(getX(), getY(), getPreferredSize().width, getPreferredSize().height);
+	validate();
+    }
+
+    public JPanel getAttributesPanel() {
+	return jAttributes;
+    }
+
+    public void mouseClicked(MouseEvent e) {
+	// Right click -> show popup menu 
+	if(e.getButton() == MouseEvent.BUTTON3) {
+	    jPopup.show(e.getComponent(), e.getX(), e.getY());
+	    return;
 	}
 
-	public void addAttribute(Attribute attribute) {
-		jAttributes.add(attribute);
-		updateRepresentation();
+	if(GUI.getInstance().getCurrentTool() == Tool.DRAW_CONNECTIVE) {
+	    getCanvas().addEdgeToCurrentConnective(this);
 	}
+    }
 
-	public void removeAttribute(int index) {
-		jAttributes.remove(index);
-		updateRepresentation();
-	}
+    @Override
+    public void setZoom(int zoom) {
+	Font f = new Font("sansserif", Font.BOLD, zoom);
 
-	public void addOperation(Operation operation) {
-		jOperations.add(operation);
-		updateRepresentation();
-	}
+	jIdentifier.setFont(f);
 
-	public void removeOperation(int index) {
-		jOperations.remove(index);
-		updateRepresentation();
-	}
+	for(Component c : jAttributes.getComponents())
+	    c.setFont(f);
 
-	@Override
-	public void setIdentifier(String identifier) {
-		super.setIdentifier(identifier);
-		jIdentifier.setText(identifier);
-		updateRepresentation();
-	}
+	for(Component c : jOperations.getComponents())
+	    c.setFont(f);
 
-	public void showEditDialog() {
-		new EditClassDialog(this);
-	}
-
-	public void updateRepresentation() {
-		invalidate();
-		setBounds(getX(), getY(), getPreferredSize().width, getPreferredSize().height);
-		validate();
-	}
-
-	public JPanel getAttributesPanel() {
-		return jAttributes;
-	}
-
-	public void setFontSize(double size) {
-		Font f = new Font("sansserif", Font.BOLD, (int) size);
-
-		jIdentifier.setFont(f);
-
-		for(Component c : jAttributes.getComponents())
-			c.setFont(f);
-
-		for(Component c : jOperations.getComponents())
-			c.setFont(f);
-
-		updateRepresentation();
-	}
-
-	public synchronized void mouseDragged(MouseEvent e) {
-		int x = e.getLocationOnScreen().x - getParent().getLocationOnScreen().x;
-		int y = e.getLocationOnScreen().y - getParent().getLocationOnScreen().y;
-		setLocation(x - mouseDragOffset.x, y - mouseDragOffset.y);
-		setPosition(x - mouseDragOffset.x, y - mouseDragOffset.y);
-		for(Connective c : getEdges()) {
-			c.calculatePoints();
-		}
-		setAffected(false);
-		getParent().repaint();
-	}
-
-	public void mousePressed(MouseEvent e) {
-		mouseDragOffset = e.getPoint();
-	}
-
-	public void mouseMoved(MouseEvent e) {}
-
-	public void mouseClicked(MouseEvent e) {
-		// Right click -> show popup menu 
-		if(e.getButton() == MouseEvent.BUTTON3) {
-			jPopup.show(e.getComponent(), e.getX(), e.getY());
-			return;
-		}
-
-		if(GUI.getInstance().getCurrentTool() == Tool.DRAW_CONNECTIVE) {
-			canvas.addEdgeToCurrentConnective(this);
-		}
-	}
-
-	public void mouseEntered(MouseEvent e) {}
-
-	public void mouseExited(MouseEvent e) {}
-
-	public void mouseReleased(MouseEvent e) {
-		setAffected(true);
-	}
+	updateRepresentation();
+    }
 
 }
 

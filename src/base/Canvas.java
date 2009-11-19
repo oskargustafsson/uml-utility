@@ -1,5 +1,6 @@
 package base;
 
+import java.awt.BasicStroke;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -49,7 +50,7 @@ public class Canvas extends JPanel {
 	    public void mouseWheelMoved(MouseWheelEvent arg0) {
 		fontSize -= arg0.getWheelRotation();
 		for(Component component : getComponents()) {
-		    ((UmlClass)component).setFontSize(fontSize);
+		    ((Entity)component).setZoom(fontSize);
 		}
 		for(Connective connective : connectives) {
 		    connective.calculatePoints();
@@ -135,8 +136,7 @@ public class Canvas extends JPanel {
 	}
     }
 
-    public void addConnective(UmlClass c1, UmlClass c2) {
-	Connective connective = new BezierCurve();
+    public void addConnective(Connective connective, Entity c1, Entity c2) {
 	connective.addVertex(c1);
 	connective.addVertex(c2);
 	connective.calculatePoints();
@@ -147,10 +147,12 @@ public class Canvas extends JPanel {
 	connectives.add(connective);
     }
 
-    Vector3D p0 = new Vector3D(10, 10, 0);
-    Vector3D p1 = new Vector3D(300, 300, 0);
-    Vector3D p2 = new Vector3D(100, 100, 0);
-    Vector3D p3 = new Vector3D(120, 100, 0);
+    final static float dash1[] = {10.0f};
+    final static BasicStroke dashed = new BasicStroke(1.0f, 
+                                          BasicStroke.CAP_BUTT, 
+                                          BasicStroke.JOIN_MITER, 
+                                          10.0f, dash1, 0.0f);
+
 
     public void paint(Graphics g) {
 
@@ -159,6 +161,8 @@ public class Canvas extends JPanel {
 
 	super.paint(g);
 
+	// g2d.setStroke(dashed);
+	
 	for(Connective c : connectives) {
 	    //g2d.draw(c);
 	    g2d.drawPolyline(c.xpoints, c.ypoints, c.npoints);

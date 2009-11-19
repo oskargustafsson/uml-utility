@@ -1,5 +1,9 @@
 package uml_entities;
 
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.File;
 import java.util.AbstractCollection;
 import java.util.LinkedHashSet;
@@ -8,6 +12,7 @@ import java.util.SortedSet;
 
 import javax.swing.JPanel;
 
+import base.Canvas;
 import base.Subgraph;
 
 import algorithm.force.Body;
@@ -18,7 +23,7 @@ import uml_entity_connectives.Connective;
 import uml_entity_connectives.StraightLine;
 
 @SuppressWarnings("serial")
-public abstract class Entity extends JPanel implements Body {
+public abstract class Entity extends JPanel implements Body, MouseMotionListener, MouseListener {
 
     private Subgraph subgraph;
 
@@ -32,15 +37,56 @@ public abstract class Entity extends JPanel implements Body {
 
     private File source;
 
+    private Canvas canvas;
+    
+    private Point mouseDragOffset = new Point();
+
     public Entity() {
 	position = new Vector3D();
 	velocity = new Vector3D();
 	edges = new LinkedList<Connective>();
     }
 
-    public Entity(File source) {
+    public Entity(Canvas canvas, File source) {
 	this();
+	this.setCanvas(canvas);
 	this.source = source;
+    }
+
+    public synchronized void mouseDragged(MouseEvent e) {
+	int x = e.getLocationOnScreen().x - getParent().getLocationOnScreen().x;
+	int y = e.getLocationOnScreen().y - getParent().getLocationOnScreen().y;
+	setLocation(x - mouseDragOffset.x, y - mouseDragOffset.y);
+	setPosition(x - mouseDragOffset.x, y - mouseDragOffset.y);
+	for(Connective c : getEdges()) {
+	    c.calculatePoints();
+	}
+	setAffected(false);
+	getParent().repaint();
+    }
+
+    public void mouseMoved(MouseEvent e) {}
+
+    public void mousePressed(MouseEvent e) {
+	mouseDragOffset = e.getPoint();
+    }
+
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    public void mouseReleased(MouseEvent e) {
+	setAffected(true);
+    }
+
+    public void mouseEntered(MouseEvent arg0) {
+	// TODO Auto-generated method stub
+
+    }
+
+    public void mouseExited(MouseEvent arg0) {
+	// TODO Auto-generated method stub
+
     }
 
     public String getIdentifier() {
@@ -54,7 +100,7 @@ public abstract class Entity extends JPanel implements Body {
     public void addVelocity(Vector3D v) {
 	velocity.add(v);
     }
-    
+
     public void addVelocity(double x, double y, double z) {
 	velocity.add(x, y, z);
     }
@@ -132,8 +178,18 @@ public abstract class Entity extends JPanel implements Body {
     public void setJavaPackage(String javaPackage) {
 	this.javaPackage = javaPackage;
     }
-    
+
     public double getZ() {
 	return position.z;
     }
+
+    public void setCanvas(Canvas canvas) {
+	this.canvas = canvas;
+    }
+
+    public Canvas getCanvas() {
+	return canvas;
+    }
+    
+    public abstract void setZoom(int zoom);
 }

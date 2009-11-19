@@ -75,7 +75,7 @@ public class ForceAlgorithm extends Algorithm {
 	if(totalVelocity < EQUILIBRIUM) {
 	    // Flatten, then stop
 	    if(!doFlatten) {
-		doFlatten = true;
+		GUI.getInstance().switchDimension();
 	    }
 	    else {
 		GUI.getInstance().stopAlgorithm();
