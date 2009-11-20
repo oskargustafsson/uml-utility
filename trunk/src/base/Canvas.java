@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import algorithm.force.ForceAlgorithm;
 import algorithm.force.Vector3D;
 
 import uml_entities.Entity;
@@ -44,7 +45,7 @@ public class Canvas extends JPanel {
 	private Point mousePos = new Point(), prevMousePos = new Point();
 
 	private int fontSize = 12;
-
+	
 	public Canvas() {
 		//currentConnective = new StraightLine();
 		currentConnective = new Association();
@@ -100,6 +101,7 @@ public class Canvas extends JPanel {
 			component.setLocation(component.getX() + dx, component.getY() + dy);
 			((Entity)component).setPosition(component.getX(), component.getY());
 		}
+		ForceAlgorithm.centreOfGravity.add(dx, dy, 0);
 		for(Connective connective : connectives) {
 			connective.calculatePoints();
 		}

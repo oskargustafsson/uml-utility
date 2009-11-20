@@ -4,6 +4,8 @@ import java.util.AbstractCollection;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+import algorithm.force.Vector3D;
+
 import uml_entities.Entity;
 import uml_entity_connectives.Connective;
 import uml_entity_connectives.StraightLine;
@@ -54,6 +56,14 @@ public class Subgraph {
 	public void addAll(Subgraph other) {
 		vertices.addAll(other.getVertices());
 		edges.addAll(other.getEdges());
+	}
+	
+	public Vector3D centreOfMass() {
+		Vector3D centre = new Vector3D(0,0,0);
+		for(Entity vertex : vertices) {
+			centre.add(vertex.getPosition());
+		}
+		return centre.mul(1.0 / (double)vertices.size());
 	}
 	
 }

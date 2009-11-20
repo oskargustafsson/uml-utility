@@ -25,12 +25,29 @@ public class ForceAlgorithm extends Algorithm {
 	private AbstractCollection<Subgraph> subgraphs;
 
 	private double totalVelocity;
+	
+	public static Vector3D centreOfGravity = new Vector3D(400,300,0);
 
 	public void execute(Canvas canvas) {
 
 		allVertices = canvas.getComponents();
 		subgraphs = canvas.getSubgraphs();
 
+		// Attraction to center
+		for(Component vertex : allVertices) {
+			Entity e = (Entity)vertex;
+			e.getVelocity().sub(PhysicsLaws.attraction(e, centreOfGravity));
+		}
+		
+		// Repel on subgrapg level
+		/*for(Subgraph subgraph : subgraphs) {
+			for(Subgraph otherSubgraph : subgraphs) {
+				if(subgraph != otherSubgraph) {
+					for(Entity vertex : )
+				}
+			}
+		}*/
+		
 		for(Subgraph subgraph : subgraphs) {
 			for(Entity vertex : subgraph.getVertices()) {
 
@@ -45,7 +62,7 @@ public class ForceAlgorithm extends Algorithm {
 				if(doFlatten) {
 					//e.addVelocity(0, 0, -Math.sqrt(e.getZ()));
 					vertex.addVelocity(0, 0, Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
-					System.out.println(Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
+					//System.out.println(Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
 				}
 			}
 
@@ -59,7 +76,7 @@ public class ForceAlgorithm extends Algorithm {
 
 		totalVelocity = 0;
 
-		// Damping and appliance of the velocity
+		// Gravitation, damping and appliance of the velocity
 		for(Component vertex : allVertices) {
 			Entity e = (Entity)vertex;
 			Vector3D vel = e.getVelocity().mul(DAMPING);
