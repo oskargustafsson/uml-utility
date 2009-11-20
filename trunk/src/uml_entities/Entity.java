@@ -25,171 +25,175 @@ import uml_entity_connectives.StraightLine;
 @SuppressWarnings("serial")
 public abstract class Entity extends JPanel implements Body, MouseMotionListener, MouseListener {
 
-    private Subgraph subgraph;
+	private Subgraph subgraph;
 
-    private AbstractCollection<Connective> edges;
+	private AbstractCollection<Connective> edges;
 
-    private Vector3D position, velocity;
+	private Vector3D position, velocity;
 
-    private boolean isAffected = true;
+	private boolean isAffected = true;
 
-    private String javaPackage;
+	private String javaPackage;
 
-    private File source;
+	private File source;
 
-    private Canvas canvas;
-    
-    private Point mouseDragOffset = new Point();
+	private Canvas canvas;
 
-    public Entity() {
-	position = new Vector3D();
-	velocity = new Vector3D();
-	edges = new LinkedList<Connective>();
-    }
+	private Point mouseDragOffset = new Point();
 
-    public Entity(Canvas canvas, File source) {
-	this();
-	this.setCanvas(canvas);
-	this.source = source;
-    }
-
-    public synchronized void mouseDragged(MouseEvent e) {
-	int x = e.getLocationOnScreen().x - getParent().getLocationOnScreen().x;
-	int y = e.getLocationOnScreen().y - getParent().getLocationOnScreen().y;
-	setLocation(x - mouseDragOffset.x, y - mouseDragOffset.y);
-	setPosition(x - mouseDragOffset.x, y - mouseDragOffset.y);
-	for(Connective c : getEdges()) {
-	    c.calculatePoints();
+	public Entity() {
+		position = new Vector3D();
+		velocity = new Vector3D();
+		edges = new LinkedList<Connective>();
 	}
-	setAffected(false);
-	getParent().repaint();
-    }
 
-    public void mouseMoved(MouseEvent e) {}
+	public Entity(Canvas canvas, File source) {
+		this();
+		this.setCanvas(canvas);
+		this.source = source;
+	}
 
-    public void mousePressed(MouseEvent e) {
-	mouseDragOffset = e.getPoint();
-    }
+	public synchronized void mouseDragged(MouseEvent e) {
+		int x = e.getLocationOnScreen().x - getParent().getLocationOnScreen().x;
+		int y = e.getLocationOnScreen().y - getParent().getLocationOnScreen().y;
+		setLocation(x - mouseDragOffset.x, y - mouseDragOffset.y);
+		setPosition(x - mouseDragOffset.x, y - mouseDragOffset.y);
+		for(Connective c : getEdges()) {
+			c.calculatePoints();
+		}
+		setAffected(false);
+		getParent().repaint();
+	}
 
-    public void mouseClicked(MouseEvent e) {
+	public void mouseMoved(MouseEvent e) {}
 
-    }
+	public void mousePressed(MouseEvent e) {
+		mouseDragOffset = e.getPoint();
+	}
 
-    public void mouseReleased(MouseEvent e) {
-	setAffected(true);
-    }
+	public void mouseClicked(MouseEvent e) {
 
-    public void mouseEntered(MouseEvent arg0) {
-	// TODO Auto-generated method stub
+	}
 
-    }
+	public void mouseReleased(MouseEvent e) {
+		setAffected(true);
+	}
 
-    public void mouseExited(MouseEvent arg0) {
-	// TODO Auto-generated method stub
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 
-    }
+	}
 
-    public String getIdentifier() {
-	return source.getName().substring(0, source.getName().length() - 5);
-    }
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
 
-    public void setIdentifier(String identifier) {
-	// NOT DONE
-    }
+	}
 
-    public void addVelocity(Vector3D v) {
-	velocity.add(v);
-    }
+	public String getIdentifier() {
+		return source.getName().substring(0, source.getName().length() - 5);
+	}
 
-    public void addVelocity(double x, double y, double z) {
-	velocity.add(x, y, z);
-    }
+	public void setIdentifier(String identifier) {
+		// NOT DONE
+	}
 
-    public void setVelocity(Vector3D v) {
-	velocity.setTo(v);
-    }
+	public void addVelocity(Vector3D v) {
+		velocity.add(v);
+	}
 
-    public Vector3D getVelocity() {
-	return velocity;
-    }
+	public void addVelocity(double x, double y, double z) {
+		velocity.add(x, y, z);
+	}
 
-    public void addPosition(Vector3D v) {
-	position.add(v);
-    }
+	public void setVelocity(Vector3D v) {
+		velocity.setTo(v);
+	}
 
-    public void setPosition(Vector3D v) {
-	position.setTo(v);
-    }
+	public Vector3D getVelocity() {
+		return velocity;
+	}
 
-    public void setPosition(double x, double y, double z) {
-	position.setTo(x, y, z);
-    }
+	public void addPosition(Vector3D v) {
+		position.add(v);
+	}
 
-    public void setPosition(double x, double y) {
-	position.setTo(x, y, position.z);
-    }
+	public void setPosition(Vector3D v) {
+		position.setTo(v);
+	}
 
-    public Vector3D getPosition() {
-	return position;
-    }
+	public void setPosition(double x, double y, double z) {
+		position.setTo(x, y, z);
+	}
 
-    public boolean isAffected() {
-	return isAffected;
-    }
+	public void setPosition(double x, double y) {
+		position.setTo(x, y, position.z);
+	}
 
-    public void setAffected(boolean isAffected) {
-	this.isAffected = isAffected;
-    }
+	public Vector3D getPosition() {
+		return position;
+	}
 
+	public boolean isAffected() {
+		return isAffected;
+	}
 
-    public Subgraph getSubgraph() {
-	return subgraph;
-    }
-
-    public void setSubgraph(Subgraph subgraph) {
-	this.subgraph = subgraph;
-    }
-
-    public void addEdge(Connective edge) {
-	edges.add(edge);
-    }
-
-    public void removeEdge(Connective edge) {
-	edges.remove(edge);
-    }
-
-    public AbstractCollection<Connective> getEdges() {
-	return edges;
-    }
+	public void setAffected(boolean isAffected) {
+		this.isAffected = isAffected;
+	}
 
 
-    public File getSourceFile() {
-	return source;
-    }
+	public Subgraph getSubgraph() {
+		return subgraph;
+	}
 
-    public void setSourceFile(File source) {
-	this.source = source;
-    }
+	public void setSubgraph(Subgraph subgraph) {
+		this.subgraph = subgraph;
+	}
 
-    public String getJavaPackage() {
-	return javaPackage;
-    }
+	public void addEdge(Connective edge) {
+		edges.add(edge);
+	}
 
-    public void setJavaPackage(String javaPackage) {
-	this.javaPackage = javaPackage;
-    }
+	public void removeEdge(Connective edge) {
+		edges.remove(edge);
+	}
 
-    public double getZ() {
-	return position.z;
-    }
+	public AbstractCollection<Connective> getEdges() {
+		return edges;
+	}
 
-    public void setCanvas(Canvas canvas) {
-	this.canvas = canvas;
-    }
 
-    public Canvas getCanvas() {
-	return canvas;
-    }
-    
-    public abstract void setZoom(int zoom);
+	public File getSourceFile() {
+		return source;
+	}
+
+	public void setSourceFile(File source) {
+		this.source = source;
+	}
+
+	public String getJavaPackage() {
+		return javaPackage;
+	}
+
+	public void setJavaPackage(String javaPackage) {
+		this.javaPackage = javaPackage;
+	}
+
+	public double getZ() {
+		return position.z;
+	}
+
+	public void setCanvas(Canvas canvas) {
+		this.canvas = canvas;
+	}
+
+	public Canvas getCanvas() {
+		return canvas;
+	}
+
+	public abstract void setZoom(int zoom);
+	
+	public void setLocation(int x, int y) {
+		super.setLocation(x, y);
+	}
 }
