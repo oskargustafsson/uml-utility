@@ -1,5 +1,9 @@
 package uml_entity_connectives;
 
-public class Dependency {
+public class Dependency extends BezierCurve {
+	
+	public Dependency() {
+		super(Connective.EMPTY, Connective.ARROWHEAD, Connective.DASHED);
+	}
 
 }

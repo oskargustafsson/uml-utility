@@ -11,28 +11,28 @@ import base.Canvas;
 
 public class SimpleInterface extends Entity implements MouseListener {
 
-    public static final int CIRCLE_DIAMETER = 30, BOUND_W = 150, BOUND_H = 50;
-    
-    public SimpleInterface(Canvas canvas, String name) {
-	super(canvas, new File("/javalib/" + name + ".java"));
-	
-	addMouseListener(this);
-	addMouseMotionListener(this);
-    }
+	public static final int CIRCLE_DIAMETER = 30, BOUND_W = 150, BOUND_H = 50;
 
-    @Override
-    public void setZoom(int zoom) {
-	// TODO Auto-generated method stub
-	
-    }
+	public SimpleInterface(Canvas canvas, String name) {
+		super(canvas, new File("/javalib/" + name + ".java"));
 
-    public void paintComponent(Graphics g) {
-	Graphics2D g2d = (Graphics2D)g;
-	g2d.setColor(Color.WHITE);
-	g2d.fillOval(0, 0, CIRCLE_DIAMETER, CIRCLE_DIAMETER);
-	
-	g2d.setColor(Color.BLACK);
-	g2d.drawString(getIdentifier(), 0, CIRCLE_DIAMETER + 16);
-    }
+		addMouseListener(this);
+		addMouseMotionListener(this);
+	}
+
+	@Override
+	public void setZoom(int zoom) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void paintComponent(Graphics g) {
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.setColor(Color.WHITE);
+		g2d.fillOval(0, 0, CIRCLE_DIAMETER, CIRCLE_DIAMETER);
+		g2d.setColor(Color.BLACK);
+		g2d.drawOval(0, 0, CIRCLE_DIAMETER, CIRCLE_DIAMETER);
+		g2d.drawString(getIdentifier(), 0, CIRCLE_DIAMETER + 16);
+	}
 
 }

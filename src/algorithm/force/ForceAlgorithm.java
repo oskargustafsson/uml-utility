@@ -12,76 +12,78 @@ import uml_entity_connectives.StraightLine;
 
 import base.Canvas;
 import base.GUI;
+import base.Subgraph;
 import algorithm.Algorithm;
 
 public class ForceAlgorithm extends Algorithm {
 
-    public static double DAMPING = 0.9, EQUILIBRIUM = 0.001;
+	public static double DAMPING = 0.9, EQUILIBRIUM = 0.001;
 
-    public static boolean doFlatten = false;
+	public static boolean doFlatten = false;
 
-    private Component[] vertices;
-    private AbstractCollection<Connective> edges;
+	private Component[] allVertices;
+	private AbstractCollection<Subgraph> subgraphs;
 
-    private double totalVelocity;
+	private double totalVelocity;
 
-    public void execute(Canvas canvas) {
+	public void execute(Canvas canvas) {
 
-	vertices = canvas.getComponents();
-	for(Component vertex : vertices) {
-	    Entity e = (Entity)vertex;
+		allVertices = canvas.getComponents();
+		subgraphs = canvas.getSubgraphs();
 
-	    // Electric repulsion
-	    for(Component otherVertex : vertices) {
-		if(vertex != otherVertex) {
-		    e.addVelocity(PhysicsLaws.coulomb(e, (Entity)otherVertex));
+		for(Subgraph subgraph : subgraphs) {
+			for(Entity vertex : subgraph.getVertices()) {
+
+				// Electric repulsion
+				for(Entity otherVertex : subgraph.getVertices()) {
+					if(vertex != otherVertex) {
+						vertex.addVelocity(PhysicsLaws.coulomb(vertex, otherVertex));
+					}
+				}
+
+				// Flattening
+				if(doFlatten) {
+					//e.addVelocity(0, 0, -Math.sqrt(e.getZ()));
+					vertex.addVelocity(0, 0, Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
+					System.out.println(Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
+				}
+			}
+
+			for(Connective edge : subgraph.getEdges()) {
+				// Spring attraction/repulsion
+				edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1)));
+				edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
+			}
+
 		}
-	    }
 
+		totalVelocity = 0;
 
-	    // Flattening
-	    if(doFlatten) {
-		//e.addVelocity(0, 0, -Math.sqrt(e.getZ()));
-		e.addVelocity(0, 0, Math.abs(e.getZ()) * Math.signum(-e.getZ()));
-		System.out.println(Math.abs(e.getZ()) * Math.signum(-e.getZ()));
-	    }
+		// Damping and appliance of the velocity
+		for(Component vertex : allVertices) {
+			Entity e = (Entity)vertex;
+			Vector3D vel = e.getVelocity().mul(DAMPING);
+			totalVelocity += vel.length() * vel.length();
+			e.addPosition(vel);
+			if(e.isAffected()) {
+				e.setLocation((int)(e.getPosition().x), (int)(e.getPosition().y));
+			}
+		}
+
+		for(Connective edge : canvas.getConnectives()) {
+			edge.calculatePoints();
+		}
+
+		if(totalVelocity < EQUILIBRIUM) {
+			// Flatten, then stop
+			if(!doFlatten) {
+				GUI.getInstance().switchDimension();
+			}
+			else {
+				GUI.getInstance().stopAlgorithm();
+			}
+		}
+
 	}
-
-	edges = canvas.getConnectives();
-	for(Connective edge : edges) {
-	    // Spring attraction/repulsion
-	    edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1)));
-	    edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
-	}
-
-	totalVelocity = 0;
-
-	// Damping and appliance of the velocity
-	for(Component vertex : vertices) {
-	    Entity e = (Entity)vertex;
-	    Vector3D vel = e.getVelocity().mul(DAMPING);
-	    totalVelocity += vel.length() * vel.length();
-	    e.addPosition(vel);
-	    if(e.isAffected()) {
-		e.setLocation((int)(e.getPosition().x), (int)(e.getPosition().y));
-	    }
-	}
-
-	edges = canvas.getConnectives();
-	for(Connective edge : edges) {
-	    edge.calculatePoints();
-	}
-
-	if(totalVelocity < EQUILIBRIUM) {
-	    // Flatten, then stop
-	    if(!doFlatten) {
-		GUI.getInstance().switchDimension();
-	    }
-	    else {
-		GUI.getInstance().stopAlgorithm();
-	    }
-	}
-
-    }
 
 }
