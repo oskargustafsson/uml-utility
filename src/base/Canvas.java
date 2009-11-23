@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -45,6 +46,8 @@ public class Canvas extends JPanel {
 	private Point mousePos = new Point(), prevMousePos = new Point();
 
 	private int fontSize = 12;
+	
+	private Rectangle boundingBox = new Rectangle(0, 0, 1000, 1000);
 	
 	public Canvas() {
 		//currentConnective = new StraightLine();
@@ -102,9 +105,11 @@ public class Canvas extends JPanel {
 			((Entity)component).setPosition(component.getX(), component.getY());
 		}
 		ForceAlgorithm.centreOfGravity.add(dx, dy, 0);
+		boundingBox.translate(dx, dy);
 		for(Connective connective : connectives) {
 			connective.calculatePoints();
 		}
+		repaint();
 	}
 
 	public Connective getCurrentConnective() {
@@ -121,6 +126,10 @@ public class Canvas extends JPanel {
 
 	public AbstractCollection<Subgraph> getSubgraphs() {
 		return subgraphs;
+	}
+	
+	public Rectangle getPhysicsBounds() {
+	    return boundingBox;
 	}
 
 	public void addEdgeToCurrentConnective(Entity entity) {
@@ -225,6 +234,8 @@ public class Canvas extends JPanel {
 			g2d.drawPolygon(c.getEndSymbol());
 			g2d.translate(-c.getEndX(), -c.getEndY());
 		}
+		
+		g2d.draw(boundingBox);
 	}
 
 	public void debugSubgraphs() {

@@ -17,38 +17,40 @@ import algorithm.Algorithm;
 
 public class ForceAlgorithm extends Algorithm {
 
-	public static double DAMPING = 0.9, EQUILIBRIUM = 0.001;
+    public static double DAMPING = 0.9, EQUILIBRIUM = 0.001;
 
-	public static boolean doFlatten = false;
+    public static boolean doFlatten = false;
 
-	private Component[] allVertices;
-	private AbstractCollection<Subgraph> subgraphs;
+    private Component[] allVertices;
+    private AbstractCollection<Subgraph> subgraphs;
 
-	private double totalVelocity;
-	
-	public static Vector3D centreOfGravity = new Vector3D(400,300,0);
+    private double totalVelocity;
 
-	public void execute(Canvas canvas) {
+    public static Vector3D centreOfGravity = new Vector3D(400,300,0);
 
-		allVertices = canvas.getComponents();
-		subgraphs = canvas.getSubgraphs();
+    public void execute(Canvas canvas) {
 
-		// Attraction to center
-		for(Component vertex : allVertices) {
+	allVertices = canvas.getComponents();
+	subgraphs = canvas.getSubgraphs();
+
+	// Attraction to center
+	/* for(Component vertex : allVertices) {
 			Entity e = (Entity)vertex;
 			e.getVelocity().sub(PhysicsLaws.attraction(e, centreOfGravity));
-		}
-		
-		// Repel on subgrapg level
-		/*for(Subgraph subgraph : subgraphs) {
+		} */
+
+	// Repel on subgraph level
+	/* for(Subgraph subgraph : subgraphs) {
 			for(Subgraph otherSubgraph : subgraphs) {
 				if(subgraph != otherSubgraph) {
-					for(Entity vertex : )
+					for(Entity vertex : subgraph.getVertices()) {
+
+					}
 				}
 			}
 		}*/
-		
-		for(Subgraph subgraph : subgraphs) {
+
+	/* for(Subgraph subgraph : subgraphs) {
 			for(Entity vertex : subgraph.getVertices()) {
 
 				// Electric repulsion
@@ -72,35 +74,64 @@ public class ForceAlgorithm extends Algorithm {
 				edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
 			}
 
+		} */
+
+	for(Component c : canvas.getComponents()) {
+	    Entity vertex = (Entity)c;
+
+	    // Electric repulsion
+	    for(Component oc : canvas.getComponents()) {
+		Entity otherVertex = (Entity)oc;
+		if(vertex != otherVertex) {
+		    vertex.addVelocity(PhysicsLaws.coulomb(vertex, otherVertex));
 		}
+	    }
 
-		totalVelocity = 0;
+	    // Flattening
+	    if(doFlatten) {
+		//e.addVelocity(0, 0, -Math.sqrt(e.getZ()));
+		vertex.addVelocity(0, 0, Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
+		//System.out.println(Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
 
-		// Gravitation, damping and appliance of the velocity
-		for(Component vertex : allVertices) {
-			Entity e = (Entity)vertex;
-			Vector3D vel = e.getVelocity().mul(DAMPING);
-			totalVelocity += vel.length() * vel.length();
-			e.addPosition(vel);
-			if(e.isAffected()) {
-				e.setLocation((int)(e.getPosition().x), (int)(e.getPosition().y));
-			}
-		}
-
-		for(Connective edge : canvas.getConnectives()) {
-			edge.calculatePoints();
-		}
-
-		if(totalVelocity < EQUILIBRIUM) {
-			// Flatten, then stop
-			if(!doFlatten) {
-				GUI.getInstance().switchDimension();
-			}
-			else {
-				GUI.getInstance().stopAlgorithm();
-			}
-		}
-
+		// Keep inside bounding box
+		
+	    }
+	    vertex.addVelocity(PhysicsLaws.boundingBoxRestriction(vertex.getPosition()));
 	}
+
+	for(Connective edge : canvas.getConnectives()) {
+	    // Spring attraction/repulsion
+	    edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1)));
+	    edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
+	}
+
+	totalVelocity = 0;
+
+	// Gravitation, damping and appliance of the velocity
+	for(Component vertex : canvas.getComponents()) {
+	    Entity e = (Entity)vertex;
+	    Vector3D vel = e.getVelocity().mul(DAMPING);
+	    totalVelocity += vel.length() * vel.length();
+	    e.addPosition(vel);
+	    if(e.isAffected()) {
+		e.setLocation((int)(e.getPosition().x), (int)(e.getPosition().y));
+	    }
+	}
+
+	for(Connective edge : canvas.getConnectives()) {
+	    edge.calculatePoints();
+	}
+
+	if(totalVelocity < EQUILIBRIUM) {
+	    // Flatten, then stop
+	    if(!doFlatten) {
+		GUI.getInstance().switchDimension();
+	    }
+	    else {
+		GUI.getInstance().stopAlgorithm();
+	    }
+	}
+
+    }
 
 }
