@@ -3,6 +3,8 @@ package algorithm.force;
 import java.awt.Component;
 import java.awt.Rectangle;
 
+import base.GUI;
+
 import uml_entities.Entity;
 
 public class PhysicsLaws {
@@ -31,10 +33,42 @@ public class PhysicsLaws {
 		return r.unit().mul(E1 * (EQUILIBRUM - r.length()));
 	}
 	
-	public static Vector3D attraction(Entity c1, Vector3D c2) {
-		Vector3D r = getDirectionVector(c1.getPosition(), c2);
+	public static Vector3D attraction(Vector3D c1, Vector3D c2) {
+		Vector3D r = getDirectionVector(c1, c2);
 		//System.out.println(r);
 		return r.unit().mul(E1 * Math.sqrt(1 + r.length()));
+	}
+	
+	public static Vector3D boundingBoxRestriction(Vector3D c1) {
+	    Rectangle bounds = GUI.getInstance().getCanvas().getPhysicsBounds();
+	    /*if(bounds.contains(c1.x, c1.y)) {
+		return new Vector3D(0,0,0);
+	    }
+	    else {
+		return attraction(new Vector3D(bounds.getCenterX(), bounds.getCenterY(), 0), c1);
+	    }*/
+	    
+	    /*if(Math.abs(c1.x - bounds.x) < Math.abs(c1.x - (bounds.x + bounds.width))) {
+		
+	    }*/
+	    
+	    double dx = 0, dy = 0;
+	    
+	    if(c1.x < bounds.x) {
+		dx = Math.sqrt(bounds.x - c1.x);
+	    }
+	    else if(bounds.x + bounds.width < c1.x) {
+		dx = -Math.sqrt(c1.x - (bounds.x + bounds.width));
+	    }
+	    
+	    if(c1.y < bounds.y) {
+		dy = Math.sqrt(bounds.y - c1.y);
+	    }
+	    else if(bounds.y + bounds.height < c1.y) {
+		dy = -Math.sqrt(c1.y - (bounds.y + bounds.height));
+	    }
+	    
+	    return new Vector3D(dx, dy, 0);
 	}
 
 	public static double getCharge(Entity c) {

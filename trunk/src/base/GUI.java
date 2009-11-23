@@ -250,6 +250,14 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		return currentTool;
 	}
 
+	public Canvas getCanvas() {
+	    return canvas;
+	}
+
+	public void setCanvas(Canvas canvas) {
+	    this.canvas = canvas;
+	}
+
 	public static void main(String[] args) {
 		GUI gui = GUI.getInstance();
 	}
