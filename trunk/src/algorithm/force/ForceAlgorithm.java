@@ -106,12 +106,12 @@ public class ForceAlgorithm extends Algorithm {
 
 			// Ortogonalize
 			if(!(edge instanceof Realization || edge instanceof Generalization)) {
-				edge.getVertex(0).addVelocity(PhysicsLaws.ortogonalize(edge.getVertex(0).getPosition(), edge.getVertex(1).getPosition()));
-				edge.getVertex(1).addVelocity(PhysicsLaws.ortogonalize(edge.getVertex(1).getPosition(), edge.getVertex(0).getPosition()));
+				edge.getVertex(0).addVelocity(PhysicsLaws.ortogonalize(edge.getVertex(0), edge.getVertex(1)));
+				edge.getVertex(1).addVelocity(PhysicsLaws.ortogonalize(edge.getVertex(1), edge.getVertex(0)));
 			}
 
 			// Hierarchies
-			Vector3D h = PhysicsLaws.hierarchy(edge.getVertex(0).getPosition(), edge.getVertex(1).getPosition());
+			Vector3D h = PhysicsLaws.hierarchy(edge.getVertex(0), edge.getVertex(1));
 			edge.getVertex(0).addVelocity(h);
 			edge.getVertex(1).addVelocity(h.mul(-1));
 		}

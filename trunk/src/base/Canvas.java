@@ -45,7 +45,7 @@ public class Canvas extends JPanel {
 
 	private Point mousePos = new Point(), prevMousePos = new Point();
 
-	private int fontSize = 12;
+	private int zoomLevel = 12;
 	
 	private Rectangle boundingBox = new Rectangle(0, 0, 1000, 1000);
 	
@@ -57,9 +57,9 @@ public class Canvas extends JPanel {
 
 		addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent arg0) {
-				fontSize -= arg0.getWheelRotation();
+				zoomLevel -= arg0.getWheelRotation();
 				for(Component component : getComponents()) {
-					((Entity)component).setZoom(fontSize);
+					((Entity)component).setZoom(zoomLevel);
 				}
 				for(Connective connective : connectives) {
 					connective.calculatePoints();
