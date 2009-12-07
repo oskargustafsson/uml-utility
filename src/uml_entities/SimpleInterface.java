@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 
+import algorithm.force.ForceAlgorithm;
+import algorithm.force.Vector3D;
 import base.Canvas;
 
 public class SimpleInterface extends Entity implements MouseListener {
@@ -19,13 +21,7 @@ public class SimpleInterface extends Entity implements MouseListener {
 		addMouseListener(this);
 		addMouseMotionListener(this);
 	}
-
-	@Override
-	public void setZoom(int zoom) {
-		// TODO Auto-generated method stub
-
-	}
-
+	
 	public void paintComponent(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setColor(Color.WHITE);
@@ -33,6 +29,12 @@ public class SimpleInterface extends Entity implements MouseListener {
 		g2d.setColor(Color.BLACK);
 		g2d.drawOval(0, 0, CIRCLE_DIAMETER, CIRCLE_DIAMETER);
 		g2d.drawString(getIdentifier(), 0, CIRCLE_DIAMETER + 16);
+	}
+
+	@Override
+	public void setZoom(int zoom) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

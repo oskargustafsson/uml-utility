@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import base.GUI;
 
 import uml_entities.Entity;
+import utils.Functions;
 
 public class PhysicsLaws {
 
@@ -24,18 +25,18 @@ public class PhysicsLaws {
 	 * calculates the force vector between c1 and c2
 	 */
 	public static Vector3D coulomb(Entity c1, Entity c2) {
-		Vector3D r = getDirectionVector(c1.getPosition(), c2.getPosition());
+		Vector3D r = getDirectionVector(c1, c2);
 		// return: r * ((c1*c2) / (4*PI*E0*|r|�))
 		return r.unit().mul((getCharge(c1) * getCharge(c2)) / (E0 * r.length() * r.length()));
 	}
 
 	public static Vector3D hooke(Entity c1, Entity c2) {
-		Vector3D r = getDirectionVector(c1.getPosition(), c2.getPosition());
+		Vector3D r = getDirectionVector(c1, c2);
 		//System.out.println("direction vector: " + r);
 		return r.unit().mul(E1 * (EQUILIBRUM - r.length()));
 	}
 
-	public static Vector3D attraction(Vector3D c1, Vector3D c2) {
+	public static Vector3D attraction(Entity c1, Entity c2) {
 		Vector3D r = getDirectionVector(c1, c2);
 		//System.out.println(r);
 		return r.unit().mul(E1 * Math.sqrt(1 + r.length()));
@@ -73,13 +74,13 @@ public class PhysicsLaws {
 		return new Vector3D(dx, dy, 0);
 	}
 
-	public static Vector3D ortogonalize(Vector3D c1, Vector3D c2) {
+	public static Vector3D ortogonalize(Entity c1, Entity c2) {
 		Vector3D r = getDirectionVector(c1, c2);
 		double angle = Math.atan2(r.x, r.y);
 		return normal(r).unit().mul(Math.signum(Math.sin((4.0 * angle)) * Math.abs(Math.sin(2.0 * angle))));
 	}
 
-	public static Vector3D hierarchy(Vector3D c1, Vector3D c2) {
+	public static Vector3D hierarchy(Entity c1, Entity c2) {
 		// c1 is a subordinate of c2
 		Vector3D r = getDirectionVector(c2, c1);
 		return new Vector3D(0, (PI - Math.abs(Math.atan(r.y + HIERARCHY_Y_DIST))) * 10, 0);
@@ -94,9 +95,12 @@ public class PhysicsLaws {
 		//return (c.getWidth() + c.getHeight());
 	}
 
-	public static Vector3D getDirectionVector(Vector3D c1, Vector3D c2) {
-		Vector3D ret = new Vector3D(c1);
-		ret.sub(c2);
-		return ret;
+	public static Vector3D getDirectionVector(Entity c1, Entity c2) {
+		/*Vector3D ret = new Vector3D(c1.getPosition());
+		ret.sub(c2.getPosition());
+		return ret;*/
+		
+		// swap to compensate for incorrect implementations of physics functions
+		return Functions.getDistance(c2, c1);
 	}
 }

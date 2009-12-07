@@ -59,8 +59,10 @@ public class Realization extends BezierCurve {
 
 		// Second point
 		if(e1 instanceof SimpleInterface) {
-			xpoints[NODES] = (int)(x1 - (w1 * (x1-x0) / length));
-			ypoints[NODES] = (int)(y1 - (h1 * (y1-y0) / length));
+			//xpoints[NODES] = (int)(x1 - (2* w1 * (x1-x0) / length));
+			//ypoints[NODES] = (int)(y1 - (h1 * (y1-y0) / length));
+			xpoints[NODES] = (int)(x1 -  w1 * Math.cos(Math.atan2(y1-y0, x1-x0)));
+			ypoints[NODES] = (int)(y1 -  h1 * Math.sin(Math.atan2(y1-y0, x1-x0)));
 			dx1 = 1;
 			dy1 = 1;
 		}
