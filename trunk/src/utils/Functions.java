@@ -46,27 +46,25 @@ public class Functions {
 	    return Visibility.UNDEFINED;
 	}
 	
-	public static Vector3D getDistance(Entity c1, Entity c2) {
+	public static Vector3D getDistance(Entity e0, Entity e1) {
 		
 		Vector3D distance = new Vector3D(0,0,0);
-		
-		Entity 
-		e0 = c1, 
-		e1 = c2;
 
 		double 
 		x0 = e0.getX() + e0.getWidth() / 2,
 		y0 = e0.getY() + e0.getHeight() / 2,
+		z0 = e0.getZ(),
 		w0 = e0.getWidth() / 2,
 		h0 = e0.getHeight() / 2,
 		x1 = e1.getX() + e1.getWidth() / 2,
 		y1 = e1.getY() + e1.getHeight() / 2,
+		z1 = e1.getZ(),
 		w1 = e1.getWidth() / 2,
 		h1 = e1.getHeight() / 2;
 
 		double k = (y1 - y0) / (x1 - x0) ;
 
-		// Second entity
+	/*	// Second entity
 		if(Math.abs(k) > (h1 / w1)) {
 			distance.x += (int)(x1 + Math.signum(y0-y1) * h1 / k);
 			distance.y += (int)(y1 + Math.signum(y0-y1) * h1);
@@ -86,7 +84,7 @@ public class Functions {
 			distance.y -= (int)(y0 + Math.signum(x1-x0) * w0 * k);
 		}
 		
-		distance.z += c2.getZ() - c1.getZ();
+		distance.z += c2.getZ() - c1.getZ(); */
 		
 		/* // First point
 		if(Math.abs(k) > (h0 / w0)) {
@@ -106,6 +104,48 @@ public class Functions {
 		
 		//Vector3D r = new Vector3D(c2.getPosition());
 		//return r.sub(c1.getPosition());
+		
+		Vector3D intersect = new Vector3D(0,0,0);
+		
+		double xzAngle = Math.atan2(z1-z0, x1-x0);
+		double kVal = (y1-y0)/(x1-x0);
+		
+		// distance from center to center
+		distance.setTo(x1 - x0, y1 - y0, z1 - z0);
+		double originalLength = distance.length();
+		
+		// FIRST CYLINDER
+		
+		// subtract intersections
+		intersect.setTo(w0 * Math.cos(xzAngle), 0, Math.sin(xzAngle));
+		intersect.y = kVal * intersect.length();
+		
+		// top/bottom
+		if(Math.abs(intersect.y) > h0) {
+			intersect.mul(1 - (intersect.y - (Math.signum(intersect.y) * h0)));
+		}
+		
+		distance.sub(intersect);
+		
+		
+		// SECOND CYLINDER
+	/*	
+		// subtract intersections
+		intersect.setTo(w1 * Math.cos(xzAngle), 0, Math.sin(xzAngle));
+		intersect.y = kVal * intersect.length();
+		
+		// top/bottom
+		if(Math.abs(intersect.y) > h1) {
+			intersect.mul(1 - (intersect.y - (Math.signum(intersect.y) * h0)));
+		}
+		
+		distance.sub(intersect); */
+		
+		if(distance.length() > originalLength) {
+			distance.setTo(x1-x0, y1-y0, z1-z0);
+		}
+		
+		distance.setTo(x1 - x0, y1 - y0, z1 - z0);
 		
 		return distance;
 	}
