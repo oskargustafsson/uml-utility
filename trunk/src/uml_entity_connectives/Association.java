@@ -9,9 +9,14 @@ public class Association extends BezierCurve {
 		super(Connective.EMPTY, Connective.EMPTY, Connective.PLAIN);		
 	}
 	
+	private Vector3D intersect = new Vector3D(0,0,0);
+	private Vector3D distance = new Vector3D(0,0,0);
+	
 	public void calculatePoints() {
 		
-		Entity 
+	    super.calculatePoints();
+	    
+		/*Entity 
 		e0 = getVertex(0), 
 		e1 = getVertex(1);
 
@@ -29,35 +34,49 @@ public class Association extends BezierCurve {
 		k = (y1 - y0) / (x1 - x0),
 		s;
 		
-		Vector3D intersect = new Vector3D(0,0,0);
-		Vector3D distance = new Vector3D(0,0,0);
+		double dx = (x1-x0) != 0 ? (x1-x0) : 0.00001;
+		double dy = (y1-y0) != 0 ? (y1-y0) : 0.00001;
+		double dz = (z1-z0) != 0 ? (z1-z0) : 0.00001;
+	
+		// distance from center to center, in XZ-plane
+		distance.setTo(dx, 0, dz);
+		double origXZDistance = distance.length();
 		
-		double xzAngle = Math.atan2(z1-z0, x1-x0);
-		double kVal = (y1-y0)/(x1-x0);
 		
-		// distance from center to center
-		distance.setTo(x1 - x0, y1 - y0, z1 - z0);
+		// circles cylinder in XZ-plane
+		intersect.setTo(dx, 0, dz);
+		intersect.mul((w0 + w1) / origXZDistance);
 		
-		// FIRST CYLINDER
+		// if the circles intersect, set intersect to original distance - 1
+		if(intersect.length() > origXZDistance + 1) {
+		    intersect.normalize();
+		    intersect.mul(distance.length() - 1);
+		}
 		
-		// subtract intersections
-		intersect.setTo(w0 * Math.cos(xzAngle), 0, Math.sin(xzAngle));
-		intersect.y = kVal * intersect.length();
+		// switch to 3D
+		distance.y = dy;
 		
-		// top/bottom
-		/*if(Math.abs(intersect.y) > h0) {
-			//intersect.mul(1 - (intersect.y - (Math.signum(intersect.y) * h0)));
-			intersect.mul(h0/Math.abs(intersect.y));
-		}*/
+		// calculate where the Y-component should be
+		intersect.y = dy * intersect.length() / origXZDistance;
+		
+		// cap Y at top/bottom of cylinder
+		if(Math.abs(intersect.y) > h0 + h1) {
+		    intersect.mul((h0 + h1)/Math.abs(intersect.y));
+		}
+		
+		
+		
+		
+		
+		xpoints[0] = (int)(x0 + intersect.x / 2.0);
+		ypoints[0] = (int)(y0 + intersect.y / 2.0);
 		
 		distance.sub(intersect);
 		
-		xpoints[0] = (int)x0;
-		ypoints[0] = (int)y0;
-		
-		xpoints[NODES] = (int)(x0 + distance.x);
-		ypoints[NODES] = (int)(y0 + distance.y);
-		
-		generateRepresentation();
+		xpoints[NODES] = (int)(xpoints[0] + distance.x);
+		ypoints[NODES] = (int)(ypoints[0] + distance.y);
+
+		    
+		generateRepresentation();*/
 	}
 }
