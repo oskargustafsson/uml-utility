@@ -12,11 +12,14 @@ public class PhysicsLaws {
 
 	public static double PI = 3.14159265;
 
+	// 
+	public static double SHORTEST_DIST = 100.0;
+	
 	// Coulomb constants
 	public static double E0 = 10.0;
 
 	// Hooke constants
-	public static double EQUILIBRUM = 100.0;
+	public static double EQUILIBRUM = 300.0;
 	public static double E1 = 0.1;
 
 	// Hierarchy constants
@@ -27,7 +30,7 @@ public class PhysicsLaws {
 	public static Vector3D coulomb(Entity c1, Entity c2) {
 		Vector3D r = getDirectionVector(c1, c2);
 		// return: r * ((c1*c2) / (4*PI*E0*|r|�))
-		return r.unit().mul((getCharge(c1) * getCharge(c2)) / (E0 * r.length() * r.length()));
+		return r.unit().mul((getCharge(c1) * getCharge(c2)) / (E0 * r.length() * r.length() + SHORTEST_DIST));
 	}
 
 	public static Vector3D hooke(Entity c1, Entity c2) {

@@ -46,9 +46,10 @@ public class Functions {
 	    return Visibility.UNDEFINED;
 	}
 	
+	private static Vector3D intersect = new Vector3D(0,0,0);
+	private static Vector3D distance = new Vector3D(0,0,0);
+	
 	public static Vector3D getDistance(Entity e0, Entity e1) {
-		
-		Vector3D distance = new Vector3D(0,0,0);
 
 		double 
 		x0 = e0.getX() + e0.getWidth() / 2,
@@ -102,50 +103,37 @@ public class Functions {
 			distance.add((x1 + Math.signum(x0-x1) * w1), (y1 + Math.signum(x0-x1) * w1 * k), 0);
 		} */
 		
-		//Vector3D r = new Vector3D(c2.getPosition());
-		//return r.sub(c1.getPosition());
+		double dx = (x1-x0) != 0 ? (x1-x0) : 0.00001;
+		double dy = (y1-y0) != 0 ? (y1-y0) : 0.00001;
+		double dz = (z1-z0) != 0 ? (z1-z0) : 0.00001;
+	
+		// distance from center to center, in XZ-plane
+		distance.setTo(dx, 0, dz);
+		double origXZDistance = distance.length();
 		
-		Vector3D intersect = new Vector3D(0,0,0);
 		
-		double xzAngle = Math.atan2(z1-z0, x1-x0);
-		double kVal = (y1-y0)/(x1-x0);
+		// circles cylinder in XZ-plane
+		intersect.setTo(dx, 0, dz);
+		intersect.mul((w0 + w1) / origXZDistance);
 		
-		// distance from center to center
-		distance.setTo(x1 - x0, y1 - y0, z1 - z0);
-		double originalLength = distance.length();
+		// if the circles intersect, set intersect to original distance - 1
+		if(intersect.length() > origXZDistance + 1) {
+		    intersect.normalize();
+		    intersect.mul(distance.length() - 1);
+		}
 		
-		// FIRST CYLINDER
+		// switch to 3D
+		distance.y = dy;
 		
-		// subtract intersections
-		intersect.setTo(w0 * Math.cos(xzAngle), 0, Math.sin(xzAngle));
-		intersect.y = kVal * intersect.length();
+		// calculate where the Y-component should be
+		intersect.y = dy * intersect.length() / origXZDistance;
 		
-		// top/bottom
-		if(Math.abs(intersect.y) > h0) {
-			intersect.mul(1 - (intersect.y - (Math.signum(intersect.y) * h0)));
+		// cap Y at top/bottom of cylinder
+		if(Math.abs(intersect.y) > h0 + h1) {
+		    intersect.mul((h0 + h1)/Math.abs(intersect.y));
 		}
 		
 		distance.sub(intersect);
-		
-		
-		// SECOND CYLINDER
-	/*	
-		// subtract intersections
-		intersect.setTo(w1 * Math.cos(xzAngle), 0, Math.sin(xzAngle));
-		intersect.y = kVal * intersect.length();
-		
-		// top/bottom
-		if(Math.abs(intersect.y) > h1) {
-			intersect.mul(1 - (intersect.y - (Math.signum(intersect.y) * h0)));
-		}
-		
-		distance.sub(intersect); */
-		
-		if(distance.length() > originalLength) {
-			distance.setTo(x1-x0, y1-y0, z1-z0);
-		}
-		
-		distance.setTo(x1 - x0, y1 - y0, z1 - z0);
 		
 		return distance;
 	}

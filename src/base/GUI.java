@@ -214,7 +214,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 				spacing * (pos/(getWidth()-spacing)) + (int)(Math.random() * noise), 
 				c.getPreferredSize().width, 
 				c.getPreferredSize().height);
-		c.setPosition(new Vector3D(c.getX(), c.getY(), (int)(Math.random() * noise * 10)));
+		c.setPosition(new Vector3D(c.getX(), c.getY(), (int)(Math.random() * noise * 100)));
 		pos = (pos + spacing) % (getWidth() * getHeight());
 		c.validate();
 		return c;

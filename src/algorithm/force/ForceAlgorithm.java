@@ -19,7 +19,7 @@ import algorithm.Algorithm;
 
 public class ForceAlgorithm extends Algorithm {
 
-	public static double DAMPING = 0.9, EQUILIBRIUM = 0.001;
+	public static double DAMPING = 0.6, EQUILIBRIUM = 0.001, MAX_VELOCITY = 100;
 
 	public static boolean doFlatten = false;
 
@@ -95,7 +95,7 @@ public class ForceAlgorithm extends Algorithm {
 			}
 
 			// Keep inside bounding box
-			vertex.addVelocity(PhysicsLaws.boundingBoxRestriction(vertex.getPosition()));
+			// vertex.addVelocity(PhysicsLaws.boundingBoxRestriction(vertex.getPosition()));
 
 		}
 
@@ -104,7 +104,7 @@ public class ForceAlgorithm extends Algorithm {
 			edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1)));
 			edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
 
-			/*
+			
 			if(!(edge instanceof Realization || edge instanceof Generalization)) {
 				// Ortogonalize
 				edge.getVertex(0).addVelocity(PhysicsLaws.ortogonalize(edge.getVertex(0), edge.getVertex(1)));
@@ -115,15 +115,18 @@ public class ForceAlgorithm extends Algorithm {
 				Vector3D h = PhysicsLaws.hierarchy(edge.getVertex(0), edge.getVertex(1));
 				edge.getVertex(0).addVelocity(h);
 				edge.getVertex(1).addVelocity(h.mul(-1));
-			} */
+			}
 		}
 
 		totalVelocity = 0;
 
-		// Gravitation, damping and appliance of the velocity
+		// Gravitation, damping, max velocity check and appliance of the velocity
 		for(Component vertex : canvas.getComponents()) {
 			Entity e = (Entity)vertex;
 			Vector3D vel = e.getVelocity().mul(DAMPING);
+			if(vel.length() > MAX_VELOCITY) {
+			    vel.mul(DAMPING);
+			}
 			totalVelocity += vel.length() * vel.length();
 			e.addPosition(vel);
 			if(e.isAffected()) {
