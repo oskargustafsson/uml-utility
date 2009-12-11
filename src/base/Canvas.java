@@ -235,7 +235,7 @@ public class Canvas extends JPanel {
 			g2d.translate(-c.getEndX(), -c.getEndY());
 		}
 		
-		g2d.draw(boundingBox);
+		//g2d.draw(boundingBox);
 	}
 
 	public void debugSubgraphs() {

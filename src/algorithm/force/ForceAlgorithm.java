@@ -19,7 +19,7 @@ import algorithm.Algorithm;
 
 public class ForceAlgorithm extends Algorithm {
 
-	public static double DAMPING = 0.6, EQUILIBRIUM = 0.001, MAX_VELOCITY = 100;
+	public static double DAMPING = 0.55, EQUILIBRIUM = 0.001, MAX_VELOCITY = 100;
 
 	public static boolean doFlatten = false;
 
@@ -91,7 +91,7 @@ public class ForceAlgorithm extends Algorithm {
 
 			// Flattening
 			if(doFlatten) {
-				vertex.addVelocity(0, 0, Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
+				vertex.addVelocity(0, 0, Math.sqrt(Math.abs(vertex.getZ())) * Math.signum(-vertex.getZ()));
 			}
 
 			// Keep inside bounding box
