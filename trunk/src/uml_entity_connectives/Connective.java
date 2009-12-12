@@ -11,6 +11,8 @@ public abstract class Connective extends Polygon {
 
 	protected double dx0 = 0, dy0 = 0, dx1 = 0, dy1 = 0;
 	
+	protected String multiplicity[] = {"", ""};
+	
 	public static final Polygon EMPTY = new Polygon(new int[0], new int[0], 0);
 	public static final Polygon TRIANGLE = new Polygon(new int[]{0, 10, 10}, new int[]{0, -10, 10}, 3);
 	public static final Polygon ARROWHEAD = new Polygon(new int[]{0, 10, 0, 10, 0}, new int[]{0, -10, 0, 10, 0}, 5);
@@ -132,5 +134,13 @@ public abstract class Connective extends Polygon {
 		dummy.npoints = p.npoints;
 		
 		return dummy;
+	}
+	
+	public String getMultiplicity(int i) {
+		return multiplicity[i];
+	}
+	
+	public void setMultiplicity(String str, int i) {
+		multiplicity[i] = str;
 	}
 }

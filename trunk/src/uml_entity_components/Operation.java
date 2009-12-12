@@ -49,8 +49,9 @@ public class Operation extends ClassEntity implements Indexable {
 	private void updateRepresentation() {
 		String rep = Functions.getVisibilityRepresentation(getVisibility()) + getName() + "(";		// visibility and name always defined
 		for(Attribute a : arguments) {
-			rep += a.getText();
+			rep += a.getText() + ",";
 		}
+		rep = rep.substring(0, rep.length() - 1);	// remove trailing comma
 		rep += ")";
 		rep += type.equals("") ? "" : ": " + type;
 		if(rep.length() >= 40)

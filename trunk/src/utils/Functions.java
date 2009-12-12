@@ -141,4 +141,8 @@ public class Functions {
 
 		return distance;
 	}
+	
+	public static String getMultiplicityFromString(String s) {
+		return "1";
+	}
 }
