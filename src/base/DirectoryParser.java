@@ -100,33 +100,42 @@ public class DirectoryParser {
 		@Override
 		public void visit(MethodDeclaration n, A arg) {
 			//System.out.println("Method: " + n.getName() + "   " + n.getParameters());
-			
-			Object[] args = new Object[4];
-			args[0] = Functions.visibilityFromInt(n.getModifiers());
-			args[1] = n.getName();
-			args[2] = n.getType().toString();
-			args[3] = "";
-			Operation operation = new Operation(args);
-			for(Parameter parameter : n.getParameters()) {
-				args[0] = Functions.visibilityFromInt(parameter.getModifiers());
-				args[1] = parameter.getId() == null ? "" : parameter.getId().toString();
-				args[2] = parameter.getType().toString();
+			try {
+
+				Object[] args = new Object[4];
+				args[0] = Functions.visibilityFromInt(n.getModifiers());
+				args[1] = n.getName();
+				args[2] = n.getType().toString();
 				args[3] = "";
-				operation.addArgument(new Attribute(args));
+				Operation operation = new Operation(args);
+				if(n.getParameters() != null) {
+					for(Parameter parameter : n.getParameters()) {
+						args[0] = Functions.visibilityFromInt(parameter.getModifiers());
+						args[1] = parameter.getId() == null ? "" : parameter.getId().toString();
+						args[2] = parameter.getType().toString();
+						args[3] = "";
+						operation.addArgument(new Attribute(args));
+					}
+				}
+				((UmlClass)cl).addOperation(operation);
 			}
-			((UmlClass)cl).addOperation(operation);
+			catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		@Override
 		public void visit(FieldDeclaration n, A arg) {
-			Object[] args = new Object[4];
-			args[0] = Functions.visibilityFromInt(n.getModifiers());
-			args[2] = n.getType().toString();
-
 			try {
+				Object[] args = new Object[4];
+				args[0] = Functions.visibilityFromInt(n.getModifiers());
+				args[2] = n.getType().toString();
+
 				if( classes.containsKey(args[2]) && !cl.getIdentifier().equals(args[2]) ) {
 					// if local class, add association
-					GUI.getInstance().addConnective(new Association(), cl, classes.get(args[2]));
+					Association a = new Association();
+					a.setMultiplicity(Functions.getMultiplicityFromString(""), 1); // not done
+					GUI.getInstance().addConnective(a, cl, classes.get(args[2]));
 				}
 				else {
 					// else, add attribute

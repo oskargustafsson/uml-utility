@@ -6,7 +6,7 @@ import uml_entities.Entity;
 public class Association extends BezierCurve {
 
 	public Association() {
-		super(Connective.EMPTY, Connective.EMPTY, Connective.PLAIN);		
+		super(Connective.EMPTY, Connective.EMPTY, Connective.PLAIN);
 	}
 	
 	private Vector3D intersect = new Vector3D(0,0,0);

@@ -38,6 +38,8 @@ import uml_entity_connectives.StraightLine;
 @SuppressWarnings("serial")
 public class Canvas extends JPanel {
 
+	public static final int LABEL_DIST = 10, CHAR_W = 5;
+	
 	private LinkedList<Subgraph> subgraphs;
 
 	private LinkedList<Connective> connectives;
@@ -202,7 +204,8 @@ public class Canvas extends JPanel {
 		subgraphs.remove(subgraph2);
 	}
 
-
+	private int dy = 0, dx = 0;
+	
 	public void paint(Graphics g) {
 
 		Graphics2D g2d = (Graphics2D)g;
@@ -225,6 +228,9 @@ public class Canvas extends JPanel {
 			g2d.fillPolygon(c.getStartSymbol());
 			g2d.setColor(Color.BLACK);
 			g2d.drawPolygon(c.getStartSymbol());
+			dx = (c.getStartDX() > 0) ? LABEL_DIST : -LABEL_DIST - CHAR_W * c.getMultiplicity(0).length();
+			dy = (c.getStartDY() > 0) ? LABEL_DIST : -LABEL_DIST;
+			g2d.drawString(c.getMultiplicity(0), dx, dy + 3);
 			g2d.translate(-c.getStartX(), -c.getStartY());
 
 			g2d.translate(c.getEndX(), c.getEndY());
@@ -232,6 +238,9 @@ public class Canvas extends JPanel {
 			g2d.fillPolygon(c.getEndSymbol());
 			g2d.setColor(Color.BLACK);
 			g2d.drawPolygon(c.getEndSymbol());
+			dx = (c.getEndDX() > 0) ? LABEL_DIST : -LABEL_DIST - CHAR_W * c.getMultiplicity(1).length();
+			dy = (c.getEndDY() > 0) ? LABEL_DIST : -LABEL_DIST;
+			g2d.drawString(c.getMultiplicity(1), dx, dy + 3);
 			g2d.translate(-c.getEndX(), -c.getEndY());
 		}
 		
