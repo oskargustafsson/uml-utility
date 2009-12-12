@@ -13,7 +13,7 @@ public class PhysicsLaws {
 	public static double PI = 3.14159265;
 
 	// 
-	public static double SHORTEST_DIST = 100.0;
+	public static double SHORTEST_DIST = 1000.0;
 	
 	// Coulomb constants
 	public static double E0 = 10.0;
@@ -86,7 +86,7 @@ public class PhysicsLaws {
 	public static Vector3D hierarchy(Entity c1, Entity c2) {
 		// c1 is a subordinate of c2
 		Vector3D r = getDirectionVector(c2, c1);
-		return new Vector3D(0, (PI - Math.abs(Math.atan(r.y + HIERARCHY_Y_DIST))) * 10, 0);
+		return new Vector3D(0, (PI - Math.abs(Math.atan(r.y + HIERARCHY_Y_DIST))) * 5, 0);
 	}
 	
 	public static Vector3D normal(Vector3D c1) {

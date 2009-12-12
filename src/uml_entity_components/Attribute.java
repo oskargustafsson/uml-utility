@@ -44,7 +44,11 @@ public class Attribute extends ClassEntity implements Indexable {
 		String rep = Functions.getVisibilityRepresentation(getVisibility()) + getName();		// visibility and name always defined
 		rep += type.equals("") ? "" : ": " + type;
 		rep += value.equals("") ? "" : " = " + value;
-		setText(rep);
+		if(rep.length() >= 40)
+			setText(rep.substring(0,37) + "...");
+		else
+			setText(rep);
+		//setText(rep);
 		validate();
 	}
 	
