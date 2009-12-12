@@ -11,19 +11,19 @@ public class Functions {
 
 	public static Visibility visibilityFromString(String string) {
 		string = string.toUpperCase().trim();
-		
+
 		if(string.equals("PRIVATE") || string.equals("+"))
 			return Visibility.PRIVATE;
-		
+
 		if(string.equals("PUBLIC"))
-			return Visibility.PRIVATE;
-		
+			return Visibility.PUBLIC;
+
 		if(string.equals("PROTECTED"))
-			return Visibility.PRIVATE;
-		
+			return Visibility.PROTECTED;
+
 		return Visibility.UNDEFINED;
 	}
-	
+
 	public static String getVisibilityRepresentation(Visibility visibility) {
 		switch(visibility) {
 		case PRIVATE:	return "-";
@@ -32,23 +32,27 @@ public class Functions {
 		default:		return "";
 		}
 	}
-	
+
 	public static Visibility visibilityFromInt(int v) {
-	    if((v & 1) != 0) {
-		return Visibility.PUBLIC;
-	    }
-	    if((v & 2) != 0) {
-		return Visibility.PROTECTED;
-	    }
-	    if((v & 4) != 0) {
-		return Visibility.PRIVATE;
-	    }
-	    return Visibility.UNDEFINED;
+		if((v & 1) != 0) {
+			//System.out.println("PUBLIC");
+			return Visibility.PUBLIC;
+		}
+		if((v & 2) != 0) {
+			//System.out.println("PROTECTED");
+			return Visibility.PROTECTED;
+		}
+		if((v & 4) != 0) {
+			//System.out.println("PRIVATE");
+			return Visibility.PRIVATE;
+		}
+		//System.out.println("UNDEF");
+		return Visibility.UNDEFINED;
 	}
-	
+
 	private static Vector3D intersect = new Vector3D(0,0,0);
 	private static Vector3D distance = new Vector3D(0,0,0);
-	
+
 	public static Vector3D getDistance(Entity e0, Entity e1) {
 
 		double 
@@ -65,7 +69,7 @@ public class Functions {
 
 		double k = (y1 - y0) / (x1 - x0) ;
 
-	/*	// Second entity
+		/*	// Second entity
 		if(Math.abs(k) > (h1 / w1)) {
 			distance.x += (int)(x1 + Math.signum(y0-y1) * h1 / k);
 			distance.y += (int)(y1 + Math.signum(y0-y1) * h1);
@@ -74,7 +78,7 @@ public class Functions {
 			distance.x += (int)(x1 + Math.signum(x0-x1) * w1);
 			distance.y += (int)(y1 + Math.signum(x0-x1) * w1 * k);
 		}
-		
+
 		// First entity
 		if(Math.abs(k) > (h0 / w0)) {
 			distance.x -= (int)(x0 + Math.signum(y1-y0) * h0 / k);
@@ -84,9 +88,9 @@ public class Functions {
 			distance.x -= (int)(x0 + Math.signum(x1-x0) * w0);
 			distance.y -= (int)(y0 + Math.signum(x1-x0) * w0 * k);
 		}
-		
+
 		distance.z += c2.getZ() - c1.getZ(); */
-		
+
 		/* // First point
 		if(Math.abs(k) > (h0 / w0)) {
 			distance.setTo(-(x0 + Math.signum(y1-y0) * h0 / k), -(y0 + Math.signum(y1-y0) * h0), 0);
@@ -102,39 +106,39 @@ public class Functions {
 		else {
 			distance.add((x1 + Math.signum(x0-x1) * w1), (y1 + Math.signum(x0-x1) * w1 * k), 0);
 		} */
-		
+
 		double dx = (x1-x0) != 0 ? (x1-x0) : 0.00001;
 		double dy = (y1-y0) != 0 ? (y1-y0) : 0.00001;
 		double dz = (z1-z0) != 0 ? (z1-z0) : 0.00001;
-	
+
 		// distance from center to center, in XZ-plane
 		distance.setTo(dx, 0, dz);
 		double origXZDistance = distance.length();
-		
-		
+
+
 		// circles cylinder in XZ-plane
 		intersect.setTo(dx, 0, dz);
 		intersect.mul((w0 + w1) / origXZDistance);
-		
+
 		// if the circles intersect, set intersect to original distance - 1
 		if(intersect.length() > origXZDistance + 1) {
-		    intersect.normalize();
-		    intersect.mul(distance.length() - 1);
+			intersect.normalize();
+			intersect.mul(distance.length() - 1);
 		}
-		
+
 		// switch to 3D
 		distance.y = dy;
-		
+
 		// calculate where the Y-component should be
 		intersect.y = dy * intersect.length() / origXZDistance;
-		
+
 		// cap Y at top/bottom of cylinder
 		if(Math.abs(intersect.y) > h0 + h1) {
-		    intersect.mul((h0 + h1)/Math.abs(intersect.y));
+			intersect.mul((h0 + h1)/Math.abs(intersect.y));
 		}
-		
+
 		distance.sub(intersect);
-		
+
 		return distance;
 	}
 }

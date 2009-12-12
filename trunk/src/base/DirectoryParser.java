@@ -6,6 +6,7 @@ import japa.parser.ast.body.AnnotationMemberDeclaration;
 import japa.parser.ast.body.ClassOrInterfaceDeclaration;
 import japa.parser.ast.body.FieldDeclaration;
 import japa.parser.ast.body.MethodDeclaration;
+import japa.parser.ast.body.Parameter;
 import japa.parser.ast.body.VariableDeclarator;
 import japa.parser.ast.stmt.TypeDeclarationStmt;
 import japa.parser.ast.type.ClassOrInterfaceType;
@@ -23,6 +24,7 @@ import uml_entities.Entity;
 import uml_entities.SimpleInterface;
 import uml_entities.UmlClass;
 import uml_entity_components.Attribute;
+import uml_entity_components.Operation;
 import uml_entity_connectives.Association;
 import uml_entity_connectives.Generalization;
 import uml_entity_connectives.Realization;
@@ -55,7 +57,7 @@ public class DirectoryParser {
 			for(File file : children) {
 				if(file.isFile() && file.getName().endsWith(".java")) {
 					Entity e = GUI.getInstance().addClass(file);
-					System.out.println("Added class" + e.getIdentifier());
+					//System.out.println("Added class" + e.getIdentifier());
 				}
 				if(file.isDirectory()) {
 					readDirectory(file);
@@ -98,6 +100,21 @@ public class DirectoryParser {
 		@Override
 		public void visit(MethodDeclaration n, A arg) {
 			//System.out.println("Method: " + n.getName() + "   " + n.getParameters());
+			
+			Object[] args = new Object[4];
+			args[0] = Functions.visibilityFromInt(n.getModifiers());
+			args[1] = n.getName();
+			args[2] = n.getType().toString();
+			args[3] = "";
+			Operation operation = new Operation(args);
+			for(Parameter parameter : n.getParameters()) {
+				args[0] = Functions.visibilityFromInt(parameter.getModifiers());
+				args[1] = parameter.getId() == null ? "" : parameter.getId().toString();
+				args[2] = parameter.getType().toString();
+				args[3] = "";
+				operation.addArgument(new Attribute(args));
+			}
+			((UmlClass)cl).addOperation(operation);
 		}
 
 		@Override
@@ -138,7 +155,7 @@ public class DirectoryParser {
 				if(n.getExtends() != null) {
 					for(ClassOrInterfaceType t : n.getExtends() ) {
 						if(classes.containsKey(t.getName()) && !cl.getIdentifier().equals(t.getName())) {
-							System.out.println(cl.getIdentifier() +" extends " + t.getName());
+							//System.out.println(cl.getIdentifier() +" extends " + t.getName());
 							GUI.getInstance().addConnective(new Generalization() ,cl, classes.get(t.getName()));
 						}
 					}
@@ -148,7 +165,7 @@ public class DirectoryParser {
 					for(ClassOrInterfaceType t : n.getImplements()) {
 						if(classes.containsKey(t.getName())) {
 							// if local class, add realization connective
-							System.out.println(cl.getIdentifier() +" implements " + t.getName());
+							//System.out.println(cl.getIdentifier() +" implements " + t.getName());
 							GUI.getInstance().addConnective(new Realization(), cl, classes.get(t.getName()));
 						}
 						else {

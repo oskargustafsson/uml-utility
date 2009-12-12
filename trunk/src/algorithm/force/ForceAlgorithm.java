@@ -91,7 +91,7 @@ public class ForceAlgorithm extends Algorithm {
 
 			// Flattening
 			if(doFlatten) {
-				vertex.addVelocity(0, 0, Math.sqrt(Math.abs(vertex.getZ())) * Math.signum(-vertex.getZ()));
+				vertex.addVelocity(0, 0, Math.abs(vertex.getZ()) * Math.signum(-vertex.getZ()));
 			}
 
 			// Keep inside bounding box

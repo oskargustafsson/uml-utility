@@ -47,10 +47,16 @@ public class Operation extends ClassEntity implements Indexable {
 	}
 	
 	private void updateRepresentation() {
-		String rep = Functions.getVisibilityRepresentation(getVisibility()) + getName();		// visibility and name always defined
+		String rep = Functions.getVisibilityRepresentation(getVisibility()) + getName() + "(";		// visibility and name always defined
+		for(Attribute a : arguments) {
+			rep += a.getText();
+		}
+		rep += ")";
 		rep += type.equals("") ? "" : ": " + type;
-		rep += value.equals("") ? "" : " = " + value;
-		setText(rep);
+		if(rep.length() >= 40)
+			setText(rep.substring(0,37) + "...");
+		else
+			setText(rep);
 		validate();
 	}
 	
@@ -80,6 +86,11 @@ public class Operation extends ClassEntity implements Indexable {
 		case 3: setValue(object.toString()); break;
 		default: System.out.println("Something is wrong.");;
 		}
+		updateRepresentation();
+	}
+	
+	public void addArgument(Attribute attribute) {
+		arguments.add(attribute);
 		updateRepresentation();
 	}
 	
