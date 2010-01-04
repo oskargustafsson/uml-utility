@@ -1,9 +1,14 @@
 package algorithm;
 
+import algorithm.force.ForceAlgorithm;
 import base.Canvas;
 import base.GUI;
 
 public class Applier extends Thread {
+	
+	public long iterations = 0, millisAlgorithm = 0, before, afterAlgorithm;
+	
+	public static long millisDraw = 0; 
 
 	private Algorithm algorithm;
 	private Canvas data;
@@ -22,6 +27,7 @@ public class Applier extends Thread {
 		else {
 			doRepeat = false;
 		}
+		iterations = millisAlgorithm = millisDraw = 0;
 	}
 
 	public Applier(Algorithm algorithm, Canvas data) {
@@ -30,14 +36,24 @@ public class Applier extends Thread {
 
 	public void run() {
 		do {
+			iterations++;
+			before = System.currentTimeMillis();
 			algorithm.execute(data);
-			data.repaint();
+			afterAlgorithm = System.currentTimeMillis();
+			millisAlgorithm += afterAlgorithm - before;
+			//data.repaint();				//////////// !!
+			System.out.println("Iterations: " + iterations);
 			try {
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
 				break;
 			}
 		} while (doRepeat && !isInterrupted() && !algorithm.hasTerminated());
+		System.out.println("Iterations: " + iterations);
+		System.out.println("Runtime/iter " + ((double)millisAlgorithm/(double)iterations));
+		System.out.println("Runtime " + millisAlgorithm + "\n");
+		System.out.println("Verices: " + GUI.getInstance().getCanvas().getComponents().length);
+		System.out.println("Edges: " + GUI.getInstance().getCanvas().getConnectives().size());
 	}
 
 	public void setDoRepeat(boolean doRepeat) {

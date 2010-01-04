@@ -14,7 +14,7 @@ public class PhysicsLaws {
 
 	// 
 	public static double SHORTEST_DIST = 1000.0;
-	
+
 	// Coulomb constants
 	public static double E0 = 10.0;
 
@@ -36,7 +36,9 @@ public class PhysicsLaws {
 	public static Vector3D hooke(Entity c1, Entity c2) {
 		Vector3D r = getDirectionVector(c1, c2);
 		//System.out.println("direction vector: " + r);
-		return r.unit().mul(E1 * (EQUILIBRUM - r.length()));
+		return r.unit().mul(
+				E1 * Math.log1p(Math.abs(EQUILIBRUM - r.length()) ) * Math.signum(EQUILIBRUM - r.length()) );
+				//Math.sqrt(Math.abs(EQUILIBRUM - r.length()) ) * Math.signum(EQUILIBRUM - r.length()) );
 	}
 
 	public static Vector3D attraction(Entity c1, Entity c2) {
@@ -80,15 +82,27 @@ public class PhysicsLaws {
 	public static Vector3D ortogonalize(Entity c1, Entity c2) {
 		Vector3D r = getDirectionVector(c1, c2);
 		double angle = Math.atan2(r.x, r.y);
-		return normal(r).unit().mul(Math.signum(Math.sin((4.0 * angle)) * Math.abs(Math.sin(2.0 * angle))));
+		if(angle < 0) angle = 2*PI+angle;
+		//System.out.println(angle);
+		return normal(r).unit().mul(4 * Math.signum(Math.sin((4.0 * angle))) * Math.abs(Math.sin(2.0 * angle)));
 	}
 
 	public static Vector3D hierarchy(Entity c1, Entity c2) {
 		// c1 is a subordinate of c2
+		/*Vector3D r = getDirectionVector(c2, c1);
+		r.y += HIERARCHY_Y_DIST;
+		if(r.y < 0) {
+			r.setTo(0, (50.0 / (double)(1 + (r.y * r.y))), 0);
+		}
+		else {
+			r.setTo(0, 50.0, 0);
+		}
+		return r; */
 		Vector3D r = getDirectionVector(c2, c1);
-		return new Vector3D(0, (PI - Math.abs(Math.atan(r.y + HIERARCHY_Y_DIST))) * 5, 0);
+		r.setTo(0, ((PI/2.0) + Math.atan(r.y + HIERARCHY_Y_DIST)) * 50, 0);
+		return r;
 	}
-	
+
 	public static Vector3D normal(Vector3D c1) {
 		return new Vector3D(-c1.y, c1.x, c1.z);
 	}
@@ -102,7 +116,7 @@ public class PhysicsLaws {
 		/*Vector3D ret = new Vector3D(c1.getPosition());
 		ret.sub(c2.getPosition());
 		return ret;*/
-		
+
 		// swap to compensate for incorrect implementations of physics functions
 		return Functions.getDistance(c2, c1);
 	}
