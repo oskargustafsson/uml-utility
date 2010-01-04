@@ -30,6 +30,8 @@ public class ForceAlgorithm extends Algorithm {
 
 	public static Vector3D centreOfGravity = new Vector3D(400,300,0);
 
+	Vector3D h;
+	
 	public void execute(Canvas canvas) {
 
 		allVertices = canvas.getComponents();
@@ -107,12 +109,13 @@ public class ForceAlgorithm extends Algorithm {
 			
 			if(!(edge instanceof Realization || edge instanceof Generalization)) {
 				// Ortogonalize
-				edge.getVertex(0).addVelocity(PhysicsLaws.ortogonalize(edge.getVertex(0), edge.getVertex(1)));
-				edge.getVertex(1).addVelocity(PhysicsLaws.ortogonalize(edge.getVertex(1), edge.getVertex(0)));
+				h = PhysicsLaws.ortogonalize(edge.getVertex(0), edge.getVertex(1));
+				edge.getVertex(0).addVelocity(h);
+				edge.getVertex(1).addVelocity(h.mul(-1));
 			}
 			else {
 				// Hierarchies 
-				Vector3D h = PhysicsLaws.hierarchy(edge.getVertex(0), edge.getVertex(1));
+				h = PhysicsLaws.hierarchy(edge.getVertex(0), edge.getVertex(1));
 				edge.getVertex(0).addVelocity(h);
 				edge.getVertex(1).addVelocity(h.mul(-1));
 			}
@@ -123,15 +126,16 @@ public class ForceAlgorithm extends Algorithm {
 		// Gravitation, damping, max velocity check and appliance of the velocity
 		for(Component vertex : canvas.getComponents()) {
 			Entity e = (Entity)vertex;
-			Vector3D vel = e.getVelocity().mul(DAMPING);
+			Vector3D vel = e.getVelocity();
 			if(vel.length() > MAX_VELOCITY) {
 			    vel.mul(DAMPING);
 			}
 			totalVelocity += vel.length() * vel.length();
 			e.addPosition(vel);
-			if(e.isAffected()) {
+			vel.mul(DAMPING);
+			/*if(e.isAffected()) {
 				e.setLocation((int)(e.getPosition().x), (int)(e.getPosition().y));
-			}
+			}*/
 		}
 
 		for(Connective edge : canvas.getConnectives()) {

@@ -30,6 +30,7 @@ import uml_entities.SimpleInterface;
 import uml_entities.UmlClass;
 import uml_entity_components.Attribute;
 import uml_entity_components.Visibility;
+import uml_entity_connectives.Association;
 import uml_entity_connectives.Connective;
 import uml_entity_connectives.StraightLine;
 
@@ -44,7 +45,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 	private JMenuBar menubar;
 	private JMenu mnuFile, mnuEdit;
-	private JMenuItem mnuNew, mnuOpen, mnuDebugSubgraphs;
+	private JMenuItem mnuNew, mnuOpen, mnuDebugSubgraphs, mnuGenerateRandom;
 	private JToolBar toolbar;
 	private JButton addClass, addConnective, runAlgorithm, btnFlatten;
 	private Canvas canvas;
@@ -91,12 +92,20 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 				canvas.debugSubgraphs();
 			}
 		});
-		
+
+		mnuGenerateRandom = new JMenuItem("Generate random graph...");
+		mnuGenerateRandom.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				generateRandomGraph(Integer.parseInt(JOptionPane.showInputDialog("Number of nodes")));
+			}
+		});
+
 		mnuFile = new JMenu("File");
 		mnuFile.add(mnuOpen);
 
 		mnuEdit = new JMenu("Edit");
 		mnuEdit.add(mnuDebugSubgraphs);
+		mnuEdit.add(mnuGenerateRandom);
 
 		menubar = new JMenuBar();
 
@@ -172,6 +181,25 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 	}
 
+	private static int autoID = 0;
+	private Random rand = new Random();
+	
+	private void generateRandomGraph(int count) {
+		for(int j = 0; j < count; j++) {
+			SimpleInterface i = new SimpleInterface(canvas, "AUTO" + (autoID++));
+			i.setBounds((int)(rand.nextInt(3000)), (int)(rand.nextInt(3000)), SimpleInterface.BOUND_W, SimpleInterface.BOUND_H);
+			i.setPosition(new Vector3D(i.getX(), i.getY(), (int)(Math.random() * noise * 10)));
+			canvas.add(i);
+			canvas.addSubgraph(i);
+			i.validate();
+		}
+		
+		Component[] comp = canvas.getComponents();
+		for(int j = 0; j < count; j++) {
+			addConnective(new Association(), (Entity)comp[rand.nextInt(comp.length)], (Entity)comp[rand.nextInt(comp.length)]);
+		}
+	}
+
 	public void switchDimension() {
 		if(ForceAlgorithm.doFlatten) {
 			btnFlatten.setText("Flatten");
@@ -193,15 +221,19 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	}
 
 	public void stopAlgorithm() {
-		applier.interrupt();
-		applier = null;
-		runAlgorithm.setText("Run");
+		if(applier != null) {
+			applier.interrupt();
+			applier = null;
+			runAlgorithm.setText("Run");
+		}
 	}
 
 	public void startAlgorithm() {
-		applier = new Applier(new ForceAlgorithm(), canvas, 25);
-		applier.start();
-		runAlgorithm.setText("Stop");
+		if(applier == null) {
+			applier = new Applier(new ForceAlgorithm(), canvas, 25);
+			applier.start();
+			runAlgorithm.setText("Stop");
+		}
 	}
 
 	private static int pos = 0, spacing = 200, noise = 20;
@@ -251,11 +283,11 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	}
 
 	public Canvas getCanvas() {
-	    return canvas;
+		return canvas;
 	}
 
 	public void setCanvas(Canvas canvas) {
-	    this.canvas = canvas;
+		this.canvas = canvas;
 	}
 
 	public static void main(String[] args) {
