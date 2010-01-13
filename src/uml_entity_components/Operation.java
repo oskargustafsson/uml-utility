@@ -51,7 +51,9 @@ public class Operation extends ClassEntity implements Indexable {
 		for(Attribute a : arguments) {
 			rep += a.getText() + ",";
 		}
-		rep = rep.substring(0, rep.length() - 1);	// remove trailing comma
+		if(arguments.size() > 0) {
+			rep = rep.substring(0, rep.length() - 1);	// remove trailing comma
+		}
 		rep += ")";
 		rep += type.equals("") ? "" : ": " + type;
 		if(rep.length() >= 40)

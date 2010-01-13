@@ -33,6 +33,9 @@ import uml_entities.UmlClass;
 import uml_entity_connectives.Association;
 import uml_entity_connectives.BezierCurve;
 import uml_entity_connectives.Connective;
+import uml_entity_connectives.Dependency;
+import uml_entity_connectives.Generalization;
+import uml_entity_connectives.Realization;
 import uml_entity_connectives.StraightLine;
 
 @SuppressWarnings("serial")
@@ -53,7 +56,7 @@ public class Canvas extends JPanel {
 	
 	public Canvas() {
 		//currentConnective = new StraightLine();
-		currentConnective = new Association();
+		currentConnective = null;
 		connectives = new LinkedList<Connective>();
 		subgraphs = new LinkedList<Subgraph>();
 
@@ -89,9 +92,9 @@ public class Canvas extends JPanel {
 			public void mouseMoved(MouseEvent e) {
 				prevMousePos.setLocation(mousePos);
 				mousePos.setLocation(e.getPoint());
-				if(currentConnective.getVertexCount() == 1) {
+				/*if(currentConnective.getVertexCount() == 1) {
 					repaint();
-				}
+				}*/
 			}
 
 		});
@@ -154,7 +157,7 @@ public class Canvas extends JPanel {
 			mergeSubgraphs(currentConnective);
 			currentConnective.getVertex(0).getSubgraph().addEdge(currentConnective);
 
-			currentConnective = new Association();
+			currentConnective = null;
 			GUI.getInstance().setCurrentTool(Tool.NONE);
 			GUI.getInstance().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			GUI.getInstance().startAlgorithm();

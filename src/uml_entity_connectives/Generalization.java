@@ -6,6 +6,7 @@ public class Generalization extends BezierCurve {
 
 	public Generalization() {
 		super(Connective.EMPTY, Connective.TRIANGLE, Connective.PLAIN);
+		weight = 1;
 	}
 
 	public void calculatePoints() {

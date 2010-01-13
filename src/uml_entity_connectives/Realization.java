@@ -7,6 +7,7 @@ public class Realization extends BezierCurve {
 
 	public Realization() {
 		super(Connective.EMPTY, Connective.TRIANGLE, Connective.DASHED);
+		weight = 0.9;
 	}
 
 	public void calculatePoints() {

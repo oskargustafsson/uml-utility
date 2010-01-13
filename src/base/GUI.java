@@ -32,6 +32,9 @@ import uml_entity_components.Attribute;
 import uml_entity_components.Visibility;
 import uml_entity_connectives.Association;
 import uml_entity_connectives.Connective;
+import uml_entity_connectives.Dependency;
+import uml_entity_connectives.Generalization;
+import uml_entity_connectives.Realization;
 import uml_entity_connectives.StraightLine;
 
 @SuppressWarnings("serial")
@@ -45,9 +48,18 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 	private JMenuBar menubar;
 	private JMenu mnuFile, mnuEdit;
-	private JMenuItem mnuNew, mnuOpen, mnuDebugSubgraphs, mnuGenerateRandom;
+	private JMenuItem mnuNew, mnuOpen, mnuDebugSubgraphs, mnuGenerateRandom, mnuEditForces;
 	private JToolBar toolbar;
-	private JButton addClass, addConnective, runAlgorithm, btnFlatten;
+	
+	private JButton 
+	addClass, 
+	addAssociation,
+	addDependency,
+	addGeneralization,
+	addRealization,
+	runAlgorithm, 
+	btnFlatten;
+	
 	private Canvas canvas;
 
 	private Tool currentTool = Tool.NONE;
@@ -99,6 +111,13 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 				generateRandomGraph(Integer.parseInt(JOptionPane.showInputDialog("Number of nodes")));
 			}
 		});
+		
+		mnuEditForces = new JMenuItem("Edit forces...");
+		mnuEditForces.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new EditForces(GUI.getInstance());
+			}
+		});
 
 		mnuFile = new JMenu("File");
 		mnuFile.add(mnuOpen);
@@ -106,6 +125,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		mnuEdit = new JMenu("Edit");
 		mnuEdit.add(mnuDebugSubgraphs);
 		mnuEdit.add(mnuGenerateRandom);
+		mnuEdit.add(mnuEditForces);
 
 		menubar = new JMenuBar();
 
@@ -119,10 +139,38 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 			}
 		});
 
-		addConnective = new JButton("Conn");
-		addConnective.addActionListener(new ActionListener() {
+		addAssociation = new JButton("Ass.");
+		addAssociation.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				currentTool = Tool.DRAW_CONNECTIVE;
+				currentTool = Tool.DRAW_ASSOCIATION;
+				canvas.setCurrentConnective(new Association());
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
+		
+		addDependency = new JButton("Dep.");
+		addDependency.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentTool = Tool.DRAW_DEPENDENCY;
+				canvas.setCurrentConnective(new Dependency());
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
+		
+		addGeneralization = new JButton("Gen.");
+		addGeneralization.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentTool = Tool.DRAW_GENERALIZATION;
+				canvas.setCurrentConnective(new Generalization());
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+		});
+		
+		addRealization = new JButton("Rea.");
+		addRealization.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				currentTool = Tool.DRAW_REALIZATION;
+				canvas.setCurrentConnective(new Realization());
 				setCursor(new Cursor(Cursor.HAND_CURSOR));
 			}
 		});
@@ -150,7 +198,11 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		toolbar.setRollover(true);
 		toolbar.setVisible(false);
 		toolbar.add(addClass);
-		toolbar.add(addConnective);
+		toolbar.addSeparator();
+		toolbar.add(addAssociation);
+		toolbar.add(addDependency);
+		toolbar.add(addGeneralization);
+		toolbar.add(addRealization);
 		toolbar.addSeparator();
 		toolbar.add(runAlgorithm);
 		toolbar.add(btnFlatten);

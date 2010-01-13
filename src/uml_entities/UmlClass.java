@@ -130,7 +130,7 @@ public class UmlClass extends Entity implements MouseListener {
 			return;
 		}
 
-		if(GUI.getInstance().getCurrentTool() == Tool.DRAW_CONNECTIVE) {
+		if(GUI.getInstance().getCurrentTool() != Tool.NONE) {
 			getCanvas().addEdgeToCurrentConnective(this);
 		}
 	}

@@ -103,8 +103,8 @@ public class ForceAlgorithm extends Algorithm {
 
 		for(Connective edge : canvas.getConnectives()) {
 			// Spring attraction/repulsion
-			edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1)));
-			edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0)));
+			edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1), edge));
+			edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0), edge));
 
 			
 			if(!(edge instanceof Realization || edge instanceof Generalization)) {
@@ -133,9 +133,9 @@ public class ForceAlgorithm extends Algorithm {
 			totalVelocity += vel.length() * vel.length();
 			e.addPosition(vel);
 			vel.mul(DAMPING);
-			/*if(e.isAffected()) {
+			if(e.isAffected()) {
 				e.setLocation((int)(e.getPosition().x), (int)(e.getPosition().y));
-			}*/
+			}
 		}
 
 		for(Connective edge : canvas.getConnectives()) {
