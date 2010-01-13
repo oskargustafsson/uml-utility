@@ -6,6 +6,11 @@ import java.awt.Rectangle;
 import base.GUI;
 
 import uml_entities.Entity;
+import uml_entity_connectives.Association;
+import uml_entity_connectives.Connective;
+import uml_entity_connectives.Dependency;
+import uml_entity_connectives.Generalization;
+import uml_entity_connectives.Realization;
 import utils.Functions;
 
 public class PhysicsLaws {
@@ -16,13 +21,18 @@ public class PhysicsLaws {
 	public static double SHORTEST_DIST = 1000.0;
 
 	// Coulomb constants
+	public static int NODE_CHARGE = 1000;
 	public static double E0 = 10.0;
 
 	// Hooke constants
 	public static double EQUILIBRUM = 300.0;
-	public static double E1 = 0.1;
+	public static double HOOKE_C = 10;
+	
+	// Orthogonality constants
+	public static int ORTHO_C = 5;
 
 	// Hierarchy constants
+	public static int HIERAR_C = 50;
 	public static double HIERARCHY_Y_DIST = 100;
 	/*
 	 * calculates the force vector between c1 and c2
@@ -33,18 +43,18 @@ public class PhysicsLaws {
 		return r.unit().mul((getCharge(c1) * getCharge(c2)) / (E0 * r.length() * r.length() + SHORTEST_DIST));
 	}
 
-	public static Vector3D hooke(Entity c1, Entity c2) {
+	public static Vector3D hooke(Entity c1, Entity c2, Connective edge) {
 		Vector3D r = getDirectionVector(c1, c2);
 		//System.out.println("direction vector: " + r);
 		return r.unit().mul(
-				E1 * Math.log1p(Math.abs(EQUILIBRUM - r.length()) ) * Math.signum(EQUILIBRUM - r.length()) );
+				edge.getWeight() * (HOOKE_C / 100) * Math.sqrt(Math.abs(EQUILIBRUM - r.length()) ) * Math.signum(EQUILIBRUM - r.length()) );
 				//Math.sqrt(Math.abs(EQUILIBRUM - r.length()) ) * Math.signum(EQUILIBRUM - r.length()) );
 	}
 
 	public static Vector3D attraction(Entity c1, Entity c2) {
 		Vector3D r = getDirectionVector(c1, c2);
 		//System.out.println(r);
-		return r.unit().mul(E1 * Math.sqrt(1 + r.length()));
+		return r.unit().mul(0.1 * Math.sqrt(1 + r.length()));
 	}
 
 	public static Vector3D boundingBoxRestriction(Vector3D c1) {
@@ -84,7 +94,7 @@ public class PhysicsLaws {
 		double angle = Math.atan2(r.x, r.y);
 		if(angle < 0) angle = 2*PI+angle;
 		//System.out.println(angle);
-		return normal(r).unit().mul(4 * Math.signum(Math.sin((4.0 * angle))) * Math.abs(Math.sin(2.0 * angle)));
+		return normal(r).unit().mul(ORTHO_C * Math.signum(Math.sin((4.0 * angle))) * Math.abs(Math.sin(2.0 * angle)));
 	}
 
 	public static Vector3D hierarchy(Entity c1, Entity c2) {
@@ -99,7 +109,7 @@ public class PhysicsLaws {
 		}
 		return r; */
 		Vector3D r = getDirectionVector(c2, c1);
-		r.setTo(0, ((PI/2.0) + Math.atan(r.y + HIERARCHY_Y_DIST)) * 50, 0);
+		r.setTo(0, ((PI/2.0) + Math.atan(r.y + HIERARCHY_Y_DIST)) * HIERAR_C, 0);
 		return r;
 	}
 
@@ -108,7 +118,7 @@ public class PhysicsLaws {
 	}
 
 	public static double getCharge(Entity c) {
-		return 1000;
+		return NODE_CHARGE;
 		//return (c.getWidth() + c.getHeight());
 	}
 

@@ -7,6 +7,7 @@ public class Association extends BezierCurve {
 
 	public Association() {
 		super(Connective.EMPTY, Connective.EMPTY, Connective.PLAIN);
+		weight = 1;
 	}
 	
 	private Vector3D intersect = new Vector3D(0,0,0);

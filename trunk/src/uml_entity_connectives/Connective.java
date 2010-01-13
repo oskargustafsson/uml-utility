@@ -8,6 +8,8 @@ import java.awt.geom.Rectangle2D;
 import uml_entities.Entity;
 
 public abstract class Connective extends Polygon {
+	
+	protected double weight = 1;
 
 	protected double dx0 = 0, dy0 = 0, dx1 = 0, dy1 = 0;
 	
@@ -142,5 +144,13 @@ public abstract class Connective extends Polygon {
 	
 	public void setMultiplicity(String str, int i) {
 		multiplicity[i] = str;
+	}
+
+	public double getWeight() {
+		return weight;
+	}
+
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 }
