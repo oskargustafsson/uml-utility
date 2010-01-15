@@ -31,7 +31,7 @@ public class ForceAlgorithm extends Algorithm {
 	public static Vector3D centreOfGravity = new Vector3D(400,300,0);
 
 	Vector3D h;
-	
+
 	public void execute(Canvas canvas) {
 
 		allVertices = canvas.getComponents();
@@ -101,12 +101,29 @@ public class ForceAlgorithm extends Algorithm {
 
 		}
 
+		// Package grouping
+		for(Subgraph pkg : canvas.getPackages()) {
+			/*pkg.calcualteCentreOfMass();
+			System.out.println(pkg.centreOfMass());
+			for(Entity vertex : pkg.getVertices()) {
+				vertex.addVelocity(PhysicsLaws.packageGrouping(vertex, pkg.centreOfMass()));
+			}*/
+
+			for(Entity vertex : pkg.getVertices()) {
+				for(Entity otherVertex : pkg.getVertices()) {
+					if(vertex != otherVertex) {
+						vertex.addVelocity(PhysicsLaws.packageGrouping(vertex, otherVertex));
+					}
+				}
+			}
+		}
+
 		for(Connective edge : canvas.getConnectives()) {
 			// Spring attraction/repulsion
 			edge.getVertex(0).addVelocity(PhysicsLaws.hooke(edge.getVertex(0), edge.getVertex(1), edge));
 			edge.getVertex(1).addVelocity(PhysicsLaws.hooke(edge.getVertex(1), edge.getVertex(0), edge));
 
-			
+
 			if(!(edge instanceof Realization || edge instanceof Generalization)) {
 				// Ortogonalize
 				h = PhysicsLaws.ortogonalize(edge.getVertex(0), edge.getVertex(1));
@@ -128,7 +145,7 @@ public class ForceAlgorithm extends Algorithm {
 			Entity e = (Entity)vertex;
 			Vector3D vel = e.getVelocity();
 			if(vel.length() > MAX_VELOCITY) {
-			    vel.mul(DAMPING);
+				vel.mul(DAMPING);
 			}
 			totalVelocity += vel.length() * vel.length();
 			e.addPosition(vel);

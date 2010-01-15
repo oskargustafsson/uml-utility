@@ -34,6 +34,10 @@ public class PhysicsLaws {
 	// Hierarchy constants
 	public static int HIERAR_C = 50;
 	public static double HIERARCHY_Y_DIST = 100;
+	
+	// Package grouping
+	public static int PKG_GR_C = 10;
+	
 	/*
 	 * calculates the force vector between c1 and c2
 	 */
@@ -94,7 +98,9 @@ public class PhysicsLaws {
 		double angle = Math.atan2(r.x, r.y);
 		if(angle < 0) angle = 2*PI+angle;
 		//System.out.println(angle);
-		return normal(r).unit().mul(ORTHO_C * Math.signum(Math.sin((4.0 * angle))) * Math.abs(Math.sin(2.0 * angle)));
+		r = normal(r).unit().mul(ORTHO_C * Math.signum(Math.sin((4.0 * angle))) * Math.abs(Math.sin(2.0 * angle)));
+		//System.out.println(r.length());
+		return r;
 	}
 
 	public static Vector3D hierarchy(Entity c1, Entity c2) {
@@ -111,6 +117,12 @@ public class PhysicsLaws {
 		Vector3D r = getDirectionVector(c2, c1);
 		r.setTo(0, ((PI/2.0) + Math.atan(r.y + HIERARCHY_Y_DIST)) * HIERAR_C, 0);
 		return r;
+	}
+	
+	public static Vector3D packageGrouping(Entity c1, Entity c2) {
+		Vector3D r = getDirectionVector(c2,c1);
+		//System.out.println(" " + r);
+		return r.unit().mul((PKG_GR_C / 100) * Math.log1p(r.length()));
 	}
 
 	public static Vector3D normal(Vector3D c1) {

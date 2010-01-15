@@ -16,6 +16,8 @@ public class Subgraph {
 	
 	public int id;
 	
+	private String identifier;
+
 	private HashSet<Entity> vertices;
 	private HashSet<Connective> edges;
 
@@ -58,12 +60,26 @@ public class Subgraph {
 		edges.addAll(other.getEdges());
 	}
 	
+	private Vector3D centre = new Vector3D(0,0,0);
+	
 	public Vector3D centreOfMass() {
-		Vector3D centre = new Vector3D(0,0,0);
+		return centre;
+	}
+	
+	public void calcualteCentreOfMass() {
+		centre.setTo(0,0,0);
 		for(Entity vertex : vertices) {
 			centre.add(vertex.getPosition());
 		}
-		return centre.mul(1.0 / (double)vertices.size());
+		centre.mul(1.0 / (double)vertices.size());
+	}
+	
+	public String getIdentifier() {
+		return identifier;
+	}
+
+	public void setIdentifier(String identifier) {
+		this.identifier = identifier;
 	}
 	
 }
