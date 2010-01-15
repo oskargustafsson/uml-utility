@@ -48,7 +48,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 	private JMenuBar menubar;
 	private JMenu mnuFile, mnuEdit;
-	private JMenuItem mnuNew, mnuOpen, mnuDebugSubgraphs, mnuGenerateRandom, mnuEditForces;
+	private JMenuItem mnuNew, mnuOpen, mnuDebugSubgraphs, mnuDebugPackages, mnuGenerateRandom, mnuEditForces;
 	private JToolBar toolbar;
 	
 	private JButton 
@@ -104,6 +104,13 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 				canvas.debugSubgraphs();
 			}
 		});
+		
+		mnuDebugPackages = new JMenuItem("Debug packages");
+		mnuDebugPackages.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				canvas.debugPackages();
+			}
+		});
 
 		mnuGenerateRandom = new JMenuItem("Generate random graph...");
 		mnuGenerateRandom.addActionListener(new ActionListener() {
@@ -124,6 +131,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 
 		mnuEdit = new JMenu("Edit");
 		mnuEdit.add(mnuDebugSubgraphs);
+		mnuEdit.add(mnuDebugPackages);
 		mnuEdit.add(mnuGenerateRandom);
 		mnuEdit.add(mnuEditForces);
 

@@ -125,6 +125,20 @@ public class DirectoryParser {
 		}
 
 		@Override
+		public void visit(PackageDeclaration n, A arg) {
+			//System.out.println("PACKAGE\t " + n.getName().getName());
+			try {	
+				if(n != null && n.getName() != null && n.getName().getName() != null) {
+					GUI.getInstance().getCanvas().addToPackage(n.getName().getName(), cl);
+				}
+				else {
+					GUI.getInstance().getCanvas().addToPackage("default", cl);
+				}
+			}
+			catch(Exception e) { e.printStackTrace(); }
+		}
+
+		@Override
 		public void visit(FieldDeclaration n, A arg) {
 			try {
 				Object[] args = new Object[4];

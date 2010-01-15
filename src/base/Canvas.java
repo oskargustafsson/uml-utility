@@ -17,8 +17,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.AbstractCollection;
 import java.util.LinkedList;
 
@@ -44,6 +46,7 @@ public class Canvas extends JPanel {
 	public static final int LABEL_DIST = 10, CHAR_W = 5;
 	
 	private LinkedList<Subgraph> subgraphs;
+	private LinkedList<Subgraph> packages;
 
 	private LinkedList<Connective> connectives;
 	private Connective currentConnective;
@@ -59,6 +62,7 @@ public class Canvas extends JPanel {
 		currentConnective = null;
 		connectives = new LinkedList<Connective>();
 		subgraphs = new LinkedList<Subgraph>();
+		packages = new LinkedList<Subgraph>();
 
 		addMouseWheelListener(new MouseWheelListener() {
 			public void mouseWheelMoved(MouseWheelEvent arg0) {
@@ -209,6 +213,9 @@ public class Canvas extends JPanel {
 
 	private int dy = 0, dx = 0;
 	
+	//CubicCurve2D cc = new CubicCurve2D.Double(0, 0, 100, 0, 100, 100, 200, 200);
+	//Rectangle2D rr = new Rectangle2D.Double(110, 100, 20, 20);
+	
 	public void paint(Graphics g) {
 
 		Graphics2D g2d = (Graphics2D)g;
@@ -217,6 +224,15 @@ public class Canvas extends JPanel {
 		super.paint(g);
 
 		// g2d.setStroke(dashed);
+		
+		 
+		
+	//	g2d.draw(cc);
+	//	g2d.draw(rr);
+		
+	//	if(cc.intersects(rr)) {
+	//		System.out.println("kaka");
+	//	}
 
 		Stroke stroke = g2d.getStroke();
 
@@ -263,4 +279,32 @@ public class Canvas extends JPanel {
 		}
 
 	}
+
+	public void addToPackage(String name, Entity cl) {
+		for(Subgraph pkg : packages) {
+			if(pkg.getIdentifier().equals(name)) {
+				pkg.addVertex(cl);
+				return;
+			}
+		}
+		Subgraph sg = new Subgraph();
+		sg.setIdentifier(name);
+		sg.addVertex(cl);
+		packages.add(sg);
+	}
+
+	public void debugPackages() {
+		for(Subgraph pkg : packages) {
+			System.out.println("PACKAGE " + pkg.getIdentifier());
+			for(Entity e : pkg.getVertices()) {
+				System.out.println("  " + e.getIdentifier());
+			}
+		}
+	}
+
+	public AbstractCollection<Subgraph> getPackages() {
+		return packages;
+	}
+	
+	
 }
