@@ -58,7 +58,8 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 	addGeneralization,
 	addRealization,
 	runAlgorithm, 
-	btnFlatten;
+	btnFlatten,
+	btnOverlapCheck;
 	
 	private Canvas canvas;
 
@@ -201,6 +202,13 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 				switchDimension();
 			}
 		});
+		
+		btnOverlapCheck = new JButton("Overlap");
+		btnOverlapCheck.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				canvas.overlapCheck();
+			}
+		});
 
 		toolbar = new JToolBar(JToolBar.VERTICAL);
 		toolbar.setRollover(true);
@@ -214,6 +222,7 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		toolbar.addSeparator();
 		toolbar.add(runAlgorithm);
 		toolbar.add(btnFlatten);
+		toolbar.add(btnOverlapCheck);
 
 
 		canvas = new Canvas();
@@ -318,6 +327,25 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		i.setPosition(new Vector3D(i.getX(), i.getY(), (int)(Math.random() * noise * 10)));
 		canvas.add(i);
 		canvas.addSubgraph(i);
+		i.validate();
+		return i;
+	}
+	
+	public SimpleInterface addDummyNode(Connective conn, String name) {
+		SimpleInterface i = new SimpleInterface(canvas, name);
+		i.setBounds((conn.getStartX() + conn.getStartY()) / 2, (conn.getEndX() + conn.getEndY()) / 2, SimpleInterface.BOUND_W, SimpleInterface.BOUND_H);
+		i.setPosition(new Vector3D(i.getX(), i.getY(), (int)(Math.random() * noise * 10)));
+		canvas.add(i);
+		canvas.addSubgraph(i);
+		
+		// add new connective from vertex1 to dummy
+		canvas.addConnective(new Association(), conn.getVertex(0), i);
+		conn.getVertex(0).removeEdge(conn);
+		
+		// redirect old vertex
+		conn.setVertex(0, i);
+		i.addEdge(conn);
+		
 		i.validate();
 		return i;
 	}
