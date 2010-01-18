@@ -239,7 +239,8 @@ public class Canvas extends JPanel {
 		for(Connective c : connectives) {
 			//g2d.draw(c);
 			g2d.setStroke(c.getStroke());
-			g2d.drawPolyline(c.xpoints, c.ypoints, c.npoints);
+			//g2d.drawPolyline(c.xpoints, c.ypoints, c.npoints);
+			g2d.draw(c);
 			g2d.setStroke(stroke);
 
 			g2d.translate(c.getStartX(), c.getStartY());
@@ -304,6 +305,26 @@ public class Canvas extends JPanel {
 
 	public AbstractCollection<Subgraph> getPackages() {
 		return packages;
+	}
+
+	
+	private static int dCount = 0;
+	public void overlapCheck() {
+		
+		LinkedList<Connective> overlappers = new LinkedList<Connective>();
+		
+		for(Connective conn : connectives) {
+			for(Component comp : getComponents()) {
+				if(conn.intersects(comp.getBounds()) && comp != conn.getVertex(0) && comp != conn.getVertex(1)) {
+					System.out.println("Adding dummy node");
+					overlappers.add(conn);
+				}
+			}
+		}
+		
+		for(Connective conn : overlappers) {
+			GUI.getInstance().addDummyNode(conn, "d" + (dCount++));
+		}
 	}
 	
 	

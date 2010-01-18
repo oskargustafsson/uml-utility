@@ -38,22 +38,22 @@ public class StraightLine extends Connective {
 
 		// First point
 		if(Math.abs(k) > (h0 / w0)) {
-			xpoints[0] = (int)(x0 + Math.signum(y1-y0) * h0 / k);
-			ypoints[0] = (int)(y0 + Math.signum(y1-y0) * h0);
+			px0 = (int)(x0 + Math.signum(y1-y0) * h0 / k);
+			py0 = (int)(y0 + Math.signum(y1-y0) * h0);
 		}
 		else {
-			xpoints[0] = (int)(x0 + Math.signum(x1-x0) * w0);
-			ypoints[0] = (int)(y0 + Math.signum(x1-x0) * w0 * k);
+			px0 = (int)(x0 + Math.signum(x1-x0) * w0);
+			py0 = (int)(y0 + Math.signum(x1-x0) * w0 * k);
 		}
 
 		// Second point
 		if(Math.abs(k) > (h1 / w1)) {
-			xpoints[1] = (int)(x1 + Math.signum(y0-y1) * h1 / k);
-			ypoints[1] = (int)(y1 + Math.signum(y0-y1) * h1);
+			px1 = (int)(x1 + Math.signum(y0-y1) * h1 / k);
+			py1 = (int)(y1 + Math.signum(y0-y1) * h1);
 		}
 		else {
-			xpoints[1] = (int)(x1 + Math.signum(x0-x1) * w1);
-			ypoints[1] = (int)(y1 + Math.signum(x0-x1) * w1 * k);
+			px1 = (int)(x1 + Math.signum(x0-x1) * w1);
+			py1 = (int)(y1 + Math.signum(x0-x1) * w1 * k);
 		}
 	}
 }

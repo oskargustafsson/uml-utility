@@ -2,16 +2,17 @@ package uml_entity_connectives;
 
 import java.awt.BasicStroke;
 import java.awt.Polygon;
+import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import uml_entities.Entity;
 
-public abstract class Connective extends Polygon {
+public abstract class Connective extends CubicCurve2D.Double {
 	
 	protected double weight = 1;
 
-	protected double dx0 = 0, dy0 = 0, dx1 = 0, dy1 = 0;
+	protected double dx0 = 0, dy0 = 0, dx1 = 0, dy1 = 0, px0, py0, px1, py1;
 	
 	protected String multiplicity[] = {"", ""};
 	
@@ -29,9 +30,11 @@ public abstract class Connective extends Polygon {
 	private Polygon startSymbol, endSymbol, dummy;
 	private BasicStroke stroke;
 	
+	private int DUMMY_N = 100;
+	
 	Connective(int[] xpoints, int[] ypoints, int npoints, Polygon startSymbol, Polygon endSymbol, BasicStroke stroke) {
-		super(xpoints, ypoints, npoints);
-		dummy = new Polygon(new int[npoints], new int[npoints], npoints);
+		//super(xpoints, ypoints, npoints);
+		dummy = new Polygon(new int[DUMMY_N], new int[DUMMY_N], DUMMY_N);
 		vertices = new Entity[2];
 		nVertices = 0;
 		this.startSymbol = startSymbol;
@@ -55,23 +58,27 @@ public abstract class Connective extends Polygon {
 	public Entity getVertex(int index) {
 		return vertices[index];
 	}
+	
+	public void setVertex(int index, Entity vertex) {
+		vertices[index] = vertex;
+	}
 
 	public abstract void calculatePoints();
 	
 	public int getStartX() {
-		return xpoints[0];
+		return (int)getX1();
 	}
 	
 	public int getStartY() {
-		return ypoints[0];
+		return (int)getY1();
 	}
 	
 	public int getEndX() {
-		return xpoints[npoints-1];
+		return (int)getX2();
 	}
 	
 	public int getEndY() {
-		return ypoints[npoints-1];
+		return (int)getY2();
 	}
 
 	public int getStartDX() {

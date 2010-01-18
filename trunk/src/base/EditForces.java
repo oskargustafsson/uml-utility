@@ -54,7 +54,7 @@ public class EditForces extends JDialog {
 		});
 		
 		lblOrthogonality = new JLabel("Orthogonal stiffness", JLabel.RIGHT);
-		sliOrthogonality = new JSlider(JSlider.HORIZONTAL, 0, 1000, (int)PhysicsLaws.ORTHO_C);
+		sliOrthogonality = new JSlider(JSlider.HORIZONTAL, 0, 20, (int)PhysicsLaws.ORTHO_C);
 		sliOrthogonality.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				PhysicsLaws.ORTHO_C = sliOrthogonality.getValue();
