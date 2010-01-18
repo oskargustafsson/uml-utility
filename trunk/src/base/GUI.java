@@ -25,6 +25,7 @@ import algorithm.Applier;
 import algorithm.force.ForceAlgorithm;
 import algorithm.force.Vector3D;
 
+import uml_entities.DummyNode;
 import uml_entities.Entity;
 import uml_entities.SimpleInterface;
 import uml_entities.UmlClass;
@@ -331,15 +332,18 @@ public class GUI extends JFrame implements MouseListener, MouseMotionListener {
 		return i;
 	}
 	
-	public SimpleInterface addDummyNode(Connective conn, String name) {
-		SimpleInterface i = new SimpleInterface(canvas, name);
-		i.setBounds((conn.getStartX() + conn.getStartY()) / 2, (conn.getEndX() + conn.getEndY()) / 2, SimpleInterface.BOUND_W, SimpleInterface.BOUND_H);
+	public DummyNode addDummyNode(Connective conn, String name) {
+		DummyNode i = new DummyNode(canvas, name);
+		i.setBounds((conn.getStartX() + conn.getStartY()) / 2, (conn.getEndX() + conn.getEndY()) / 2, 1, 1);
 		i.setPosition(new Vector3D(i.getX(), i.getY(), (int)(Math.random() * noise * 10)));
 		canvas.add(i);
 		canvas.addSubgraph(i);
 		
-		// add new connective from vertex1 to dummy
-		canvas.addConnective(new Association(), conn.getVertex(0), i);
+		// add new connective from vertex0 to dummy
+		Association a = new Association();
+		a.setStroke(conn.getStroke());
+		a.setMultiplicity(conn.getMultiplicity(0), 0);
+		canvas.addConnective(a, conn.getVertex(0), i);
 		conn.getVertex(0).removeEdge(conn);
 		
 		// redirect old vertex
