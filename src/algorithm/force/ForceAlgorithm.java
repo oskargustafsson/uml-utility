@@ -5,6 +5,7 @@ import java.util.AbstractCollection;
 
 import javax.swing.JComponent;
 
+import uml_entities.DummyNode;
 import uml_entities.Entity;
 import uml_entities.UmlClass;
 import uml_entity_connectives.Connective;
@@ -86,7 +87,7 @@ public class ForceAlgorithm extends Algorithm {
 			// Electric repulsion
 			for(Component oc : canvas.getComponents()) {
 				Entity otherVertex = (Entity)oc;
-				if(vertex != otherVertex) {
+				if(vertex != otherVertex/* && !(otherVertex instanceof DummyNode)*/) {
 					vertex.addVelocity(PhysicsLaws.coulomb(vertex, otherVertex));
 				}
 			}
