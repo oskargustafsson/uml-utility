@@ -1,0 +1,1 @@
+Though this is indeed an UML diagram editor, the actual focus lies on what's under the hood: Using heuristics to automatically generate a good structure to the diagrams. Comprehension is the main measurement of what is 'good'.
